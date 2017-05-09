@@ -1,9 +1,9 @@
 #include "..\inipp\inipp.h"
-
 #include <sstream>
-#include <exception>
 
 #define TEST_EQUAL(x, y) if ((x) != (y)) std::wcout << "test error: " << x << "!=" << y << std::endl;
+
+using namespace inipp;
 
 static auto winput1 = LR"(
 ; comment
@@ -19,7 +19,8 @@ var4 =val4
    [section2]
 x = %(test)
  y = %(var1)
-z = %(x) + %(y) + %(a)
+z = %(x) + %(y) + %(a) + %(b)
+b = monkey
 
      [DEFAULT]   
 test = %(a) %(b)
@@ -53,7 +54,7 @@ void Test1() {
 	TEST_EQUAL(ini.sections.at(L"section1").at(L"var5"), L"val5");
 	TEST_EQUAL(ini.sections.at(L"section2").at(L"x"), L"hello world");
 	TEST_EQUAL(ini.sections.at(L"section2").at(L"y"), L"%(var1)");
-	TEST_EQUAL(ini.sections.at(L"section2").at(L"z"), L"hello world + %(var1) + hello");
+	TEST_EQUAL(ini.sections.at(L"section2").at(L"z"), L"hello world + %(var1) + hello + monkey");
 	TEST_EQUAL(ini.sections.at(L"DEFAULT").at(L"test"), L"hello world");
 	TEST_EQUAL(ini.sections.at(L"DEFAULT").at(L"a"), L"hello");
 	TEST_EQUAL(ini.sections.at(L"DEFAULT").at(L"b"), L"world");
@@ -61,5 +62,6 @@ void Test1() {
 
 int main() {
 	Test1();
-	std::system("pause");
+	system("pause");
+	return 0;
 }

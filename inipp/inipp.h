@@ -9,6 +9,8 @@
 #include <cctype>
 #include <locale>
 
+namespace inipp {
+
 // trim functions taken from http://stackoverflow.com/a/217605
 
 template <class CharT>
@@ -24,6 +26,7 @@ static inline void rtrim(std::basic_string<CharT> & s) {
 }
 
 // string replacement function taken from http://stackoverflow.com/a/3418285
+
 template <class CharT>
 void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
 	size_t start_pos = 0;
@@ -95,20 +98,24 @@ public:
 		}
 	}
 
-	void interpolate() {
-		const auto defsec = sections.find(default_section_name());
-		for (auto sec = sections.begin(); sec != sections.end(); sec++) {
-			for (auto val = sec->second.begin(); val != sec->second.end(); val++) {
-				for (auto defval = defsec->second.cbegin(); defval != defsec->second.cend(); defval++)
-					replace(val->second, char_interpol() + (char_interpol_start() + defval->first + char_interpol_end()), defval->second);
-				if (sec != defsec) {
-					for (auto defval = sec->second.cbegin(); defval != sec->second.cend(); defval++)
-						replace(val->second, char_interpol() + (char_interpol_start() + defval->first + char_interpol_end()), defval->second);
-				}
-			}
+	void interpolate(const Values & src, Values & dst) {
+		for (auto val = dst.begin(); val != dst.end(); val++) {
+			for (auto srcval = src.cbegin(); srcval != src.cend(); srcval++)
+				replace(val->second, char_interpol() + (char_interpol_start() + srcval->first + char_interpol_end()), srcval->second);
 		}
 	}
 
+	void interpolate() {
+		auto defsec = sections.find(default_section_name());
+		if (defsec != sections.end())
+			interpolate(defsec->second, defsec->second);
+		for (auto sec = sections.begin(); sec != sections.end(); sec++) {
+			if (sec != defsec) {
+				interpolate(sec->second, sec->second);
+				interpolate(defsec->second, sec->second);
+			}
+		}
+	}
 };
 
 class ini_reader : public basic_ini_reader<char> {
@@ -134,3 +141,5 @@ public:
 	wchar_t char_interpol_end()   const { return L')'; };
 	std::wstring default_section_name() const { return L"DEFAULT"; };
 };
+
+} // namespace inipp
