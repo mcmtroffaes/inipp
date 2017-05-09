@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <list>
 #include <unordered_map>
 #include <algorithm> 
 #include <functional> 
@@ -22,6 +23,16 @@ static inline void rtrim(std::basic_string<CharT> & s) {
 		std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
 }
 
+// string replacement function taken from http://stackoverflow.com/a/3418285
+template <class CharT>
+void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
+	size_t start_pos = 0;
+	while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length();
+	}
+}
+
 template<class CharT>
 class basic_ini_reader
 {
@@ -30,6 +41,10 @@ public:
 	typedef std::basic_istream<CharT> IStream;
 	typedef std::unordered_map<String, String> Values;
 	typedef std::unordered_map<String, Values> Sections;
+
+	Sections sections;
+	std::list<String> errors;
+
 	virtual CharT char_section_start()    const = 0;
 	virtual CharT char_section_end()      const = 0;
 	virtual CharT char_assign()           const = 0;
@@ -38,7 +53,16 @@ public:
 	virtual CharT char_interpol_start()   const = 0;
 	virtual CharT char_interpol_end()     const = 0;
 	virtual String default_section_name() const = 0;
-	Sections sections;
+
+	void generate(std::basic_ostream<CharT> & os) {
+		for (auto sec = sections.cbegin(); sec != sections.cend(); sec++) {
+			os << char_section_start() << sec->first << char_section_end() << std::endl;
+			for (auto val = sec->second.cbegin(); val != sec->second.cend(); val++) {
+				os << val->first << char_assign() << val->second << std::endl;
+			}
+		}
+	}
+
 	void parse(IStream & is) {
 		String line;
 		String section;
@@ -55,7 +79,7 @@ public:
 				}
 				else if (front == char_section_start()) {
 					if (line.back() == char_section_end())
-						section = line.substr(1, length - 1);
+						section = line.substr(1, length - 2);
 				}
 				else if (pos != String::npos) {
 					String variable(line.substr(0, pos));
@@ -64,28 +88,27 @@ public:
 					ltrim(value);
 					sections[section][variable] = value;
 				}
+				else {
+					errors.push_back(line);
+				}
 			}
 		}
 	}
 
-	String interpolate(const String & str) const {
-		String new_str = str;
-		const auto section_iter = sections.find(default_section_name());
-		if (section_iter != sections.end()) {
-			auto default_values = section_iter->second;
-			for (auto other = default_values.cbegin(); other != default_values.cend(); other++) {
-			    // see http://stackoverflow.com/a/3418285
-				String::size_type pos = 0;
-				auto old_str = char_interpol() + (char_interpol_start() + other->first) + char_interpol_end();
-				auto new_str = other->second;
-				while ((pos = new_str.find(old_str, pos)) != String::npos) {
-					new_str.replace(pos, old_str.length(), other->second);
-					pos += other->second.length();
+	void interpolate() {
+		const auto defsec = sections.find(default_section_name());
+		for (auto sec = sections.begin(); sec != sections.end(); sec++) {
+			for (auto val = sec->second.begin(); val != sec->second.end(); val++) {
+				for (auto defval = defsec->second.cbegin(); defval != defsec->second.cend(); defval++)
+					replace(val->second, char_interpol() + (char_interpol_start() + defval->first + char_interpol_end()), defval->second);
+				if (sec != defsec) {
+					for (auto defval = sec->second.cbegin(); defval != sec->second.cend(); defval++)
+						replace(val->second, char_interpol() + (char_interpol_start() + defval->first + char_interpol_end()), defval->second);
 				}
 			}
 		}
-		return new_str;
 	}
+
 };
 
 class ini_reader : public basic_ini_reader<char> {
