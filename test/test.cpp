@@ -1,11 +1,16 @@
 #include "..\inipp\inipp.h"
 #include <sstream>
 
-#define TEST_EQUAL(x, y) if ((x) != (y)) std::wcout << "test error: " << x << "!=" << y << std::endl;
+#define TEST_EQUAL(x, y) if ((x) != (y)) std::wcout << "test error: " << x << "!=" << y << std::endl
 
 using namespace inipp;
 
-static auto winput1 = LR"(
+static auto input1 = LR"(
+[section]
+variable=value
+)";
+
+static auto input2 = LR"(
 ; comment
      ; comment
 
@@ -29,11 +34,23 @@ b = world
 )";
 
 void Test1() {
-	std::wistringstream is(winput1);
+	std::wistringstream is(input1);
 	wini_reader ini;
 	ini.parse(is);
 	ini.generate(std::wcout);
-	TEST_EQUAL(ini.errors.size(), 0)
+	TEST_EQUAL(ini.errors.size(), 0);
+	TEST_EQUAL(ini.sections.at(L"section").at(L"variable"), L"value");
+	ini.interpolate();
+	ini.generate(std::wcout);
+	TEST_EQUAL(ini.sections.at(L"section").at(L"variable"), L"value");
+}
+
+void Test2() {
+	std::wistringstream is(input2);
+	wini_reader ini;
+	ini.parse(is);
+	ini.generate(std::wcout);
+	TEST_EQUAL(ini.errors.size(), 0);
 	TEST_EQUAL(ini.sections.at(L"section1").at(L"var1"), L"val1");
 	TEST_EQUAL(ini.sections.at(L"section1").at(L"var2"), L"val2");
 	TEST_EQUAL(ini.sections.at(L"section1").at(L"var3"), L"val3");
@@ -62,6 +79,7 @@ void Test1() {
 
 int main() {
 	Test1();
+	Test2();
 	system("pause");
 	return 0;
 }

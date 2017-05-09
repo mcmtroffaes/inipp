@@ -98,7 +98,7 @@ public:
 		}
 	}
 
-	void interpolate(const Values & src, Values & dst) {
+	void interpolate(const Values & src, Values & dst) const {
 		for (auto val = dst.begin(); val != dst.end(); val++) {
 			for (auto srcval = src.cbegin(); srcval != src.cend(); srcval++)
 				replace(val->second, char_interpol() + (char_interpol_start() + srcval->first + char_interpol_end()), srcval->second);
@@ -112,7 +112,8 @@ public:
 		for (auto sec = sections.begin(); sec != sections.end(); sec++) {
 			if (sec != defsec) {
 				interpolate(sec->second, sec->second);
-				interpolate(defsec->second, sec->second);
+				if (defsec != sections.end())
+					interpolate(defsec->second, sec->second);
 			}
 		}
 	}
