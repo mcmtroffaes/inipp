@@ -28,6 +28,6 @@ var4=val4
 var5=val5
 [section2]
 b=monkey
-x=%(test)
+x=hello world
 y=%(var1)
-z=%(test) + %(var1) + %(a) + monkey
+z=hello world + %(var1) + hello + monkey
