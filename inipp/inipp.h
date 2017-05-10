@@ -47,13 +47,6 @@ constexpr std::basic_string<CharT> literal(const char (&value)[LENGTH])
 	return result;
 }
 
-template <typename CharT>
-constexpr CharT literal(char value)
-{
-	std::basic_string<CharT> result{1, value};
-	return result[0];
-}
-
 template<class CharT>
 class basic_ini_reader
 {
@@ -66,25 +59,18 @@ public:
 	Sections sections;
 	std::list<String> errors;
 
-	const CharT char_section_start;
-	const CharT char_section_end;
-	const CharT char_assign;
-	const CharT char_comment;
-	const CharT char_interpol;
-	const CharT char_interpol_start;
-	const CharT char_interpol_end;
+	static const CharT char_section_start  = (CharT)'[';
+	static const CharT char_section_end    = (CharT)']';
+	static const CharT char_assign         = (CharT)'=';
+	static const CharT char_comment        = (CharT)';';
+	static const CharT char_interpol       = (CharT)'%';
+	static const CharT char_interpol_start = (CharT)'(';
+	static const CharT char_interpol_end   = (CharT)')';
 	const std::basic_string<CharT> default_section_name;
 
 	basic_ini_reader()
 		: sections()
 		, errors()
-		, char_section_start  (literal<CharT>('['))
-		, char_section_end    (literal<CharT>(']'))
-		, char_assign         (literal<CharT>('='))
-		, char_comment        (literal<CharT>(';'))
-		, char_interpol       (literal<CharT>('%'))
-		, char_interpol_start (literal<CharT>('('))
-		, char_interpol_end   (literal<CharT>(')'))
 		, default_section_name(literal<CharT>("DEFAULT")) {};
 
 	void generate(std::basic_ostream<CharT> & os) {
