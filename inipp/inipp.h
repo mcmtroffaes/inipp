@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cstring>
 #include <string>
 #include <list>
 #include <map>
@@ -38,12 +39,13 @@ void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & fr
 
 // template based string literals based on http://stackoverflow.com/a/32845111
 
-template <typename CharT, size_t LENGTH>
-constexpr std::basic_string<CharT> literal(const char (&value)[LENGTH])
+template <typename CharT>
+constexpr std::basic_string<CharT> literal(const char *value)
 {
 	std::basic_string<CharT> result{};
-	result.reserve(LENGTH);
-	std::copy(std::begin(value), std::end(value), std::back_inserter(result));
+	std::size_t length = std::strlen(value);
+	result.reserve();
+	for (auto i=0; i < length; i++) result.push_back((CharT)value[i]);
 	return result;
 }
 
