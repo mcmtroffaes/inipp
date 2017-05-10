@@ -66,12 +66,7 @@ public:
 	static const CharT char_interpol       = (CharT)'%';
 	static const CharT char_interpol_start = (CharT)'(';
 	static const CharT char_interpol_end   = (CharT)')';
-	const std::basic_string<CharT> default_section_name;
-
-	basic_ini_reader()
-		: sections()
-		, errors()
-		, default_section_name(literal<CharT>("DEFAULT")) {};
+	const std::basic_string<CharT> default_section_name = literal<CharT>("DEFAULT");
 
 	void generate(std::basic_ostream<CharT> & os) {
 		for (auto sec = sections.cbegin(); sec != sections.cend(); sec++) {
