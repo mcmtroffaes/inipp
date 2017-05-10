@@ -29,7 +29,7 @@ static inline void rtrim(std::basic_string<CharT> & s) {
 // string replacement function based on http://stackoverflow.com/a/3418285
 
 template <class CharT>
-void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
+static inline void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos) {
 		str.replace(start_pos, from.length(), to);
@@ -41,7 +41,7 @@ void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & fr
 // cannot declare constexpr due to MSVC limitations
 
 template <typename CharT>
-std::basic_string<CharT> literal(const char *value)
+static inline std::basic_string<CharT> literal(const char *value)
 {
 	std::basic_string<CharT> result{};
 	std::size_t length = std::strlen(value);
