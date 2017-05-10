@@ -1,4 +1,4 @@
-#include "..\inipp\inipp.h"
+#include "inipp.h"
 #include <sstream>
 
 #define TEST_EQUAL(x, y) if ((x) != (y)) std::wcout << "test error: " << x << "!=" << y << std::endl
