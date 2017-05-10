@@ -51,7 +51,7 @@ static inline std::basic_string<CharT> literal(const char *value)
 }
 
 template<class CharT>
-class basic_ini_reader
+class Ini
 {
 public:
 	typedef std::basic_string<CharT> String;
@@ -70,7 +70,7 @@ public:
 	static const CharT char_interpol_end   = (CharT)')';
 	const std::basic_string<CharT> default_section_name;
 
-	basic_ini_reader()
+	Ini()
 		: sections(), errors()
 		, default_section_name(literal<CharT>("DEFAULT")) {};
 
@@ -140,8 +140,5 @@ public:
 		errors.clear();
 	}
 };
-
-typedef basic_ini_reader<char> ini_reader;
-typedef basic_ini_reader<wchar_t> wini_reader;
 
 } // namespace inipp

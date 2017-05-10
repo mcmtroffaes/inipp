@@ -4,7 +4,7 @@ using namespace inipp;
 
 template <class CharT>
 static inline auto runtest(char *inifile, char *expectedfile, std::basic_ostream<CharT> & os) {
-	basic_ini_reader<CharT> ini;
+	Ini<CharT> ini;
 	auto actual = test(inifile, ini);
 	auto expected = read_all<CharT>(expectedfile);
 	os << actual;

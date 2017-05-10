@@ -6,7 +6,7 @@
 using namespace inipp;
 
 template <class CharT>
-auto read_all(const std::string & filename) {
+static inline auto read_all(const std::string & filename) {
 	std::basic_ifstream<CharT> is(filename);
 	std::basic_stringstream<CharT> sstr;
 	sstr << is.rdbuf();
@@ -14,20 +14,20 @@ auto read_all(const std::string & filename) {
 }
 
 template <class CharT>
-auto parse(const std::string & filename, basic_ini_reader<CharT> & ini) {
+static inline auto parse(const std::string & filename, Ini<CharT> & ini) {
 	std::basic_ifstream<CharT> is(filename);
 	ini.parse(is);
 }
 
 template <class CharT>
-void errors(std::basic_ostream<CharT> & os, const basic_ini_reader<CharT> & ini) {
+static inline void errors(std::basic_ostream<CharT> & os, const Ini<CharT> & ini) {
 	for (auto const & err : ini.errors) {
 		os << err << std::endl;
 	}
 }
 
 template <class CharT>
-auto test(const std::string & inifile, basic_ini_reader<CharT> & ini) {
+static inline auto test(const std::string & inifile, Ini<CharT> & ini) {
 	std::basic_ostringstream<CharT> os;
 	parse(inifile, ini);
 	os << ">>> ERRORS <<<" << std::endl;
