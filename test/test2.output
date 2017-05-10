@@ -1,0 +1,33 @@
+>>> ERRORS <<<
+>>> GENERATE <<<
+[DEFAULT]
+b=world
+a=hello
+test=%(a) %(b)
+[section2]
+b=monkey
+y=%(var1)
+z=%(x) + %(y) + %(a) + %(b)
+x=%(test)
+[section1]
+var5=val5
+var1=val1
+var2=val2
+var3=val3
+var4=val4
+>>> INTERPOLATE <<<
+[DEFAULT]
+b=world
+a=hello
+test=hello world
+[section2]
+b=monkey
+y=%(var1)
+z=hello world + %(var1) + hello + monkey
+x=hello world
+[section1]
+var5=val5
+var1=val1
+var2=val2
+var3=val3
+var4=val4

@@ -79,26 +79,40 @@ void Test2() {
 	TEST_EQUAL(ini.sections.at(L"DEFAULT").at(L"b"), L"world");
 }
 
-void errors(const wini_reader & ini) {
+std::wstring read_all(char *filename) {
+	std::wifstream is(filename);
+	std::wstringstream sstr;
+	sstr << is.rdbuf();
+	return sstr.str();
+}
+
+wini_reader parse(char *filename) {
+	wini_reader ini;
+	std::wifstream is(filename);
+	ini.parse(is);
+	return ini;
+}
+
+void errors(std::wostream & os, const wini_reader & ini) {
 	for (auto err = ini.errors.cbegin(); err != ini.errors.cend(); err++) {
-		std::wcout << *err << std::endl;
+		os << *err << std::endl;
 	}
 }
 
 int main(int argc, char *argv[]) {
-	if (argc != 2) {
-		std::wcout << "usage: runtest_w <filename>.ini" << std::endl;
+	if (argc != 3) {
+		std::wcout << "usage: runtest_w <ini-file> <expected-output-file>" << std::endl;
 		return -1;
 	}
-	std::wifstream is(argv[1]);
-	wini_reader ini;
-	ini.parse(is);
-	std::wcout << ">>> ERRORS <<<" << std::endl;
-	errors(ini);
-	std::wcout << ">>> GENERATE <<<" << std::endl;
-	ini.generate(std::wcout);
-	std::wcout << ">>> INTERPOLATE <<<" << std::endl;
+	std::wostringstream os;
+	wini_reader ini = parse(argv[1]);
+	os << ">>> ERRORS <<<" << std::endl;
+	errors(os, ini);
+	os << ">>> GENERATE <<<" << std::endl;
+	ini.generate(os);
+	os << ">>> INTERPOLATE <<<" << std::endl;
 	ini.interpolate();
-	ini.generate(std::wcout);
-	return 0;
+	ini.generate(os);
+	std::wcout << os.str();
+	return (os.str() == read_all(argv[2]))?0:-1;
 }

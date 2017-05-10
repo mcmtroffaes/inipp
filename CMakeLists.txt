@@ -5,4 +5,5 @@ add_executable(runtest_w test/runtest_w.cpp)
 install(FILES inipp.h DESTINATION include)
 
 include(CTest)
-add_test(test1 runtest_w)
+add_test(wtest1 runtest_w test/test1.ini test/test1.output)
+add_test(wtest2 runtest_w test/test2.ini test/test2.output)
