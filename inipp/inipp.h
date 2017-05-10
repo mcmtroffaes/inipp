@@ -38,14 +38,15 @@ void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & fr
 }
 
 // template based string literals based on http://stackoverflow.com/a/32845111
+// cannot declare constexpr due to MSVC limitations
 
 template <typename CharT>
-constexpr std::basic_string<CharT> literal(const char *value)
+std::basic_string<CharT> literal(const char *value)
 {
 	std::basic_string<CharT> result{};
 	std::size_t length = std::strlen(value);
 	result.reserve(length);
-	for (auto i=0; i < length; i++) result.push_back((CharT)value[i]);
+	for (int i=0; i < length; i++) result.push_back((CharT)value[i]);
 	return result;
 }
 
@@ -67,7 +68,11 @@ public:
 	static const CharT char_interpol       = (CharT)'%';
 	static const CharT char_interpol_start = (CharT)'(';
 	static const CharT char_interpol_end   = (CharT)')';
-	const std::basic_string<CharT> default_section_name = literal<CharT>("DEFAULT");
+	const std::basic_string<CharT> default_section_name;
+
+	basic_ini_reader()
+		: sections(), errors()
+		, default_section_name(literal<CharT>("DEFAULT")) {};
 
 	void generate(std::basic_ostream<CharT> & os) {
 		for (auto sec : sections) {
