@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include <unordered_map>
+#include <map>
 #include <algorithm> 
 #include <functional> 
 #include <cctype>
@@ -53,8 +53,8 @@ class basic_ini_reader
 public:
 	typedef std::basic_string<CharT> String;
 	typedef std::basic_istream<CharT> IStream;
-	typedef std::unordered_map<String, String> Values;
-	typedef std::unordered_map<String, Values> Sections;
+	typedef std::map<String, String> Values;
+	typedef std::map<String, Values> Sections;
 
 	Sections sections;
 	std::list<String> errors;
