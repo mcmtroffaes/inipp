@@ -44,7 +44,7 @@ constexpr std::basic_string<CharT> literal(const char *value)
 {
 	std::basic_string<CharT> result{};
 	std::size_t length = std::strlen(value);
-	result.reserve();
+	result.reserve(length);
 	for (auto i=0; i < length; i++) result.push_back((CharT)value[i]);
 	return result;
 }
