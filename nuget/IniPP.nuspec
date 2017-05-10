@@ -17,5 +17,6 @@
   <files>
     <file src="..\inipp\inipp.h" target="build\native\include" />
     <file src="IniPP.targets" target="build\native" />
+    <file src="..\LICENSE.txt" target="content\licenses" />
   </files>
 </package>
