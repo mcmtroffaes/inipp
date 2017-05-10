@@ -54,9 +54,8 @@ class basic_ini_reader
 {
 public:
 	typedef std::basic_string<CharT> String;
-	typedef std::basic_istream<CharT> IStream;
-	typedef std::map<String, String> Values;
-	typedef std::map<String, Values> Sections;
+	typedef std::map<String, String> Section;
+	typedef std::map<String, Section> Sections;
 
 	Sections sections;
 	std::list<String> errors;
@@ -79,7 +78,7 @@ public:
 		}
 	}
 
-	void parse(IStream & is) {
+	void parse(std::basic_istream<CharT> & is) {
 		String line;
 		String section;
 		while (!is.eof()) {
@@ -111,7 +110,7 @@ public:
 		}
 	}
 
-	void interpolate(const Values & src, Values & dst) const {
+	void interpolate(const Section & src, Section & dst) const {
 		for (auto val = dst.begin(); val != dst.end(); val++) {
 			for (auto srcval = src.cbegin(); srcval != src.cend(); srcval++)
 				replace(val->second, char_interpol + (char_interpol_start + srcval->first + char_interpol_end), srcval->second);
