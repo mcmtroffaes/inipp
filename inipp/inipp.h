@@ -11,7 +11,7 @@
 
 namespace inipp {
 
-// trim functions taken from http://stackoverflow.com/a/217605
+// trim functions based on http://stackoverflow.com/a/217605
 
 template <class CharT>
 static inline void ltrim(std::basic_string<CharT> & s) {
@@ -25,7 +25,7 @@ static inline void rtrim(std::basic_string<CharT> & s) {
 		std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
 }
 
-// string replacement function taken from http://stackoverflow.com/a/3418285
+// string replacement function based on http://stackoverflow.com/a/3418285
 
 template <class CharT>
 void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
@@ -34,6 +34,24 @@ void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & fr
 		str.replace(start_pos, from.length(), to);
 		start_pos += to.length();
 	}
+}
+
+// template based string literals based on http://stackoverflow.com/a/32845111
+
+template <typename CharT, size_t LENGTH>
+constexpr std::basic_string<CharT> literal(const char (&value)[LENGTH])
+{
+	std::basic_string<CharT> result{};
+	result.reserve(LENGTH);
+	std::copy(std::begin(value), std::end(value), std::back_inserter(result));
+	return result;
+}
+
+template <typename CharT>
+constexpr CharT literal(char value)
+{
+	std::basic_string<CharT> result{1, value};
+	return result[0];
 }
 
 template<class CharT>
@@ -48,20 +66,32 @@ public:
 	Sections sections;
 	std::list<String> errors;
 
-	virtual CharT char_section_start()    const = 0;
-	virtual CharT char_section_end()      const = 0;
-	virtual CharT char_assign()           const = 0;
-	virtual CharT char_comment()          const = 0;
-	virtual CharT char_interpol()         const = 0;
-	virtual CharT char_interpol_start()   const = 0;
-	virtual CharT char_interpol_end()     const = 0;
-	virtual String default_section_name() const = 0;
+	const CharT char_section_start;
+	const CharT char_section_end;
+	const CharT char_assign;
+	const CharT char_comment;
+	const CharT char_interpol;
+	const CharT char_interpol_start;
+	const CharT char_interpol_end;
+	const std::basic_string<CharT> default_section_name;
+
+	basic_ini_reader()
+		: sections()
+		, errors()
+		, char_section_start  (literal<CharT>('['))
+		, char_section_end    (literal<CharT>(']'))
+		, char_assign         (literal<CharT>('='))
+		, char_comment        (literal<CharT>(';'))
+		, char_interpol       (literal<CharT>('%'))
+		, char_interpol_start (literal<CharT>('('))
+		, char_interpol_end   (literal<CharT>(')'))
+		, default_section_name(literal<CharT>("DEFAULT")) {};
 
 	void generate(std::basic_ostream<CharT> & os) {
 		for (auto sec = sections.cbegin(); sec != sections.cend(); sec++) {
-			os << char_section_start() << sec->first << char_section_end() << std::endl;
+			os << char_section_start << sec->first << char_section_end << std::endl;
 			for (auto val = sec->second.cbegin(); val != sec->second.cend(); val++) {
-				os << val->first << char_assign() << val->second << std::endl;
+				os << val->first << char_assign << val->second << std::endl;
 			}
 		}
 	}
@@ -75,13 +105,13 @@ public:
 			rtrim(line);
 			auto length = line.length();
 			if (length > 0) {
-				const auto pos = line.find_first_of(char_assign());
+				const auto pos = line.find_first_of(char_assign);
 				const auto & front = line.front();
-				if (front == char_comment()) {
+				if (front == char_comment) {
 					continue;
 				}
-				else if (front == char_section_start()) {
-					if (line.back() == char_section_end())
+				else if (front == char_section_start) {
+					if (line.back() == char_section_end)
 						section = line.substr(1, length - 2);
 				}
 				else if (pos != String::npos) {
@@ -101,12 +131,12 @@ public:
 	void interpolate(const Values & src, Values & dst) const {
 		for (auto val = dst.begin(); val != dst.end(); val++) {
 			for (auto srcval = src.cbegin(); srcval != src.cend(); srcval++)
-				replace(val->second, char_interpol() + (char_interpol_start() + srcval->first + char_interpol_end()), srcval->second);
+				replace(val->second, char_interpol + (char_interpol_start + srcval->first + char_interpol_end), srcval->second);
 		}
 	}
 
 	void interpolate() {
-		auto defsec = sections.find(default_section_name());
+		auto defsec = sections.find(default_section_name);
 		if (defsec != sections.end())
 			interpolate(defsec->second, defsec->second);
 		for (auto sec = sections.begin(); sec != sections.end(); sec++) {
@@ -119,28 +149,7 @@ public:
 	}
 };
 
-class ini_reader : public basic_ini_reader<char> {
-public:
-	char char_section_start()  const { return '['; };
-	char char_section_end()    const { return ']'; };
-	char char_assign()         const { return '='; };
-	char char_comment()        const { return ';'; };
-	char char_interpol()       const { return '%'; };
-	char char_interpol_start() const { return '('; };
-	char char_interpol_end()   const { return ')'; };
-	std::string default_section_name() const { return "DEFAULT"; };
-};
-
-class wini_reader : public basic_ini_reader<wchar_t> {
-public:
-	wchar_t char_section_start()  const { return L'['; };
-	wchar_t char_section_end()    const { return L']'; };
-	wchar_t char_assign()         const { return L'='; };
-	wchar_t char_comment()        const { return L';'; };
-	wchar_t char_interpol()       const { return L'%'; };
-	wchar_t char_interpol_start() const { return L'('; };
-	wchar_t char_interpol_end()   const { return L')'; };
-	std::wstring default_section_name() const { return L"DEFAULT"; };
-};
+typedef basic_ini_reader<char> ini_reader;
+typedef basic_ini_reader<wchar_t> wini_reader;
 
 } // namespace inipp
