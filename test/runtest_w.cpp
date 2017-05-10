@@ -1,4 +1,6 @@
 #include "inipp.h"
+
+#include <fstream>
 #include <sstream>
 
 #define TEST_EQUAL(x, y) if ((x) != (y)) std::wcout << "test error: " << x << "!=" << y << std::endl
@@ -77,9 +79,26 @@ void Test2() {
 	TEST_EQUAL(ini.sections.at(L"DEFAULT").at(L"b"), L"world");
 }
 
-int main() {
-	Test1();
-	Test2();
-	system("pause");
+void errors(const wini_reader & ini) {
+	for (auto err = ini.errors.cbegin(); err != ini.errors.cend(); err++) {
+		std::wcout << *err << std::endl;
+	}
+}
+
+int main(int argc, char *argv[]) {
+	if (argc != 2) {
+		std::wcout << "usage: runtest_w <filename>.ini" << std::endl;
+		return -1;
+	}
+	std::wifstream is(argv[1]);
+	wini_reader ini;
+	ini.parse(is);
+	std::wcout << ">>> ERRORS <<<" << std::endl;
+	errors(ini);
+	std::wcout << ">>> GENERATE <<<" << std::endl;
+	ini.generate(std::wcout);
+	std::wcout << ">>> INTERPOLATE <<<" << std::endl;
+	ini.interpolate();
+	ini.generate(std::wcout);
 	return 0;
 }
