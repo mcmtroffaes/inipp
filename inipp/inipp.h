@@ -75,10 +75,10 @@ public:
 		, default_section_name(literal<CharT>("DEFAULT")) {};
 
 	void generate(std::basic_ostream<CharT> & os) {
-		for (auto sec : sections) {
-			os << char_section_start << sec->first << char_section_end << std::endl;
-			for (auto val : sec->second) {
-				os << val->first << char_assign << val->second << std::endl;
+		for (auto const & sec : sections) {
+			os << char_section_start << sec.first << char_section_end << std::endl;
+			for (auto const & val : sec.second) {
+				os << val.first << char_assign << val.second << std::endl;
 			}
 		}
 	}
@@ -116,9 +116,9 @@ public:
 	}
 
 	void interpolate(const Section & src, Section & dst) const {
-		for (auto val : dst) {
-			for (auto srcval : src)
-				replace(val->second, char_interpol + (char_interpol_start + srcval->first + char_interpol_end), srcval->second);
+		for (auto & val : dst) {
+			for (auto const & srcval : src)
+				replace(val.second, char_interpol + (char_interpol_start + srcval.first + char_interpol_end), srcval.second);
 		}
 	}
 
@@ -126,11 +126,11 @@ public:
 		auto defsec = sections.find(default_section_name);
 		if (defsec != sections.end())
 			interpolate(defsec->second, defsec->second);
-		for (auto sec : sections) {
-			if (sec != defsec) {
-				interpolate(sec->second, sec->second);
+		for (auto & sec : sections) {
+			if (sec.first != default_section_name) {
+				interpolate(sec.second, sec.second);
 				if (defsec != sections.end())
-					interpolate(defsec->second, sec->second);
+					interpolate(defsec->second, sec.second);
 			}
 		}
 	}

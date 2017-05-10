@@ -21,8 +21,8 @@ auto parse(const std::string & filename, basic_ini_reader<CharT> & ini) {
 
 template <class CharT>
 void errors(std::basic_ostream<CharT> & os, const basic_ini_reader<CharT> & ini) {
-	for (auto err = ini.errors.cbegin(); err != ini.errors.cend(); err++) {
-		os << *err << std::endl;
+	for (auto const & err : ini.errors) {
+		os << err << std::endl;
 	}
 }
 
