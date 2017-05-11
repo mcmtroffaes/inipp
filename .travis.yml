@@ -1,3 +1,5 @@
+dist: trusty
 language: cpp
-sudo: false
+install:
+  - export CXXFLAGS="-g -std=c++11 -Wall -pedantic"
 script: cmake . && make
