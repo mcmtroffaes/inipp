@@ -1,3 +1,6 @@
 version: 1.0.{build}
+build:
+  - msbuild inipp.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - nuget pack nuget/IniPP.nuspec
 artifacts:
   - path: '*.nupkg'
