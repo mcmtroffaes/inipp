@@ -1,0 +1,3 @@
+language: cpp
+sudo: false
+script: cmake . && make
