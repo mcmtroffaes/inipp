@@ -2,9 +2,7 @@ version: 1.0.{build}
 build_script:
   - msbuild inipp.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - nuget pack nuget/IniPP.nuspec
-test:
-  assemblies:
-    only:
-      - '**\unittest.dll'
+test_script:
+  - vstest.console /logger:Appveyor /Platform:x64 x64\Debug\unittest.dll
 artifacts:
   - path: '*.nupkg'
