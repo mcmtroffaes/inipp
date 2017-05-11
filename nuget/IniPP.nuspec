@@ -6,7 +6,7 @@
     <authors>Matthias C. M. Troffaes</authors>
     <owners>Matthias C. M. Troffaes</owners>
     <projectUrl>https://github.com/mcmtroffaes/inipp</projectUrl>
-    <licenseUrl>https://raw.githubusercontent.com/mcmtroffaes/inipp/master/LICENSE</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/mcmtroffaes/inipp/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple header-only C++ ini parser, with support for interpolation similar to Python's configparser.</description>
     <summary>Simple C++ ini parser.</summary>
@@ -17,6 +17,5 @@
   <files>
     <file src="..\inipp\inipp.h" target="build\native\include" />
     <file src="IniPP.targets" target="build\native" />
-    <file src="..\LICENSE.txt" target="content\licenses" />
   </files>
 </package>
