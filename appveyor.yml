@@ -6,3 +6,10 @@ test_script:
   - vstest.console /logger:Appveyor /Platform:x64 x64\Debug\unittest.dll
 artifacts:
   - path: '*.nupkg'
+deploy:
+  provider: NuGet
+  api_key:
+    secure: +eaRtuS8FIOb86osYZasM+ZoAv/569NG1sMoK08rCTzo67s5r/e1FTgoCrIOTvOK
+  artifact: /.*\.nupkg/
+  on:
+    appveyor_repo_tag: true
