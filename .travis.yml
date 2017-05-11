@@ -2,4 +2,4 @@ dist: trusty
 language: cpp
 install:
   - export CXXFLAGS="-g -std=c++11 -Wall -pedantic"
-script: cmake . && make
+script: cmake . && make && make test
