@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{93484205-1360-4B43-9D02-DE01B9443424}</ProjectGuid>
+    <ProjectGuid>{93B31110-0449-4AD7-8EA8-18F7D31857B4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>test</RootNamespace>
+    <RootNamespace>unittest</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -150,7 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="runtest-msvc.cpp" />
+    <ClCompile Include="unittest-msvc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />
