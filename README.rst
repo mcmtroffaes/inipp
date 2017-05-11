@@ -15,3 +15,5 @@ Simple header-only C++ ini parser and generator.
 * Interpolation (i.e. variable substitution, similar to Python's ConfigParser).
 
 * Simple design and implementation.
+
+* Permissive MIT license.
