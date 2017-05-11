@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "inipp", "inipp\inipp.vcxproj", "{4139EAC6-0B81-4120-9130-07E132310564}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{C85CC875-CB45-4260-A9D5-674E56A0BE05}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "runtest", "test\runtest.vcxproj", "{C85CC875-CB45-4260-A9D5-674E56A0BE05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

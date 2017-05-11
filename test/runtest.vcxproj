@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C85CC875-CB45-4260-A9D5-674E56A0BE05}</ProjectGuid>
-    <RootNamespace>test</RootNamespace>
+    <RootNamespace>runtest</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -122,9 +122,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="runtest.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
