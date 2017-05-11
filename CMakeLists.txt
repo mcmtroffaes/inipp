@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(inipp)
 include_directories("inipp/")
-add_executable(unittest test/unittest-cmake.cpp)
+add_executable(unittest unittest/unittest-cmake.cpp)
 install(FILES inipp/inipp.h DESTINATION include)
 
 enable_testing()
