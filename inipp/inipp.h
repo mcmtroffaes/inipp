@@ -80,14 +80,8 @@ inline bool extract(const std::basic_string<CharT> & value, T & dst) {
 	return bool{ is >> std::boolalpha >> dst && !(is >> c) };
 }
 
-template <>
-inline bool extract(const std::string & value, std::string & dst) {
-	dst = value;
-	return true;
-}
-
-template <>
-inline bool extract(const std::wstring & value, std::wstring & dst) {
+template <typename CharT>
+inline bool extract(const std::basic_string<CharT> & value, std::basic_string<CharT> & dst) {
 	dst = value;
 	return true;
 }
