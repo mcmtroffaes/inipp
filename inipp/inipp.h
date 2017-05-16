@@ -32,6 +32,7 @@ SOFTWARE.
 #include <algorithm> 
 #include <functional> 
 #include <cctype>
+#include <sstream>
 
 namespace inipp {
 
