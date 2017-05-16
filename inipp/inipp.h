@@ -33,6 +33,7 @@ SOFTWARE.
 #include <functional> 
 #include <cctype>
 #include <locale>
+#include <codecvt>
 
 namespace inipp {
 
@@ -76,8 +77,21 @@ static inline std::basic_string<CharT> literal(const char *value)
 
 template <typename CharT, typename T>
 static inline bool extract(const std::basic_string<CharT> & value, T & dst) {
+	CharT c;
 	std::basic_istringstream<CharT> is{ value };
-	return bool{ is >> std::boolalpha >> dst };
+	return bool{ is >> std::boolalpha >> dst && !(is >> c) };
+}
+
+template <>
+static inline bool extract(const std::string & value, std::string & dst) {
+	dst = value;
+	return true;
+}
+
+template <>
+static inline bool extract(const std::wstring & value, std::wstring & dst) {
+	dst = value;
+	return true;
 }
 
 template<class CharT>
