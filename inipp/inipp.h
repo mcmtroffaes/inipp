@@ -29,9 +29,10 @@ SOFTWARE.
 #include <iostream>
 #include <list>
 #include <map>
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <cctype>
+#include <sstream>
 
 namespace inipp {
 
@@ -152,9 +153,12 @@ public:
 	}
 
 	void interpolate(const Section & src, Section & dst) const {
-		for (auto & val : dst) {
-			for (auto const & srcval : src)
-				replace(val.second, char_interpol + (char_interpol_start + srcval.first + char_interpol_end), srcval.second);
+		for (auto & srcval : src) {
+			for (auto & val : dst) {
+				if (val != srcval) {
+					replace(val.second, char_interpol + (char_interpol_start + srcval.first + char_interpol_end), srcval.second);
+				}
+			}
 		}
 	}
 
