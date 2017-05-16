@@ -27,6 +27,8 @@ namespace unittest
 			Assert::AreEqual(std::string{ "oops" }, str);
 			Assert::IsTrue(extract(std::string{ "hello" }, str));
 			Assert::AreEqual(std::string{ "hello" }, str);
+			Assert::IsTrue(extract(std::string{ "hello world" }, str));
+			Assert::AreEqual(std::string{ "hello world" }, str);
 			Assert::IsTrue(extract(std::string{ "-10" }, i16));
 			Assert::AreEqual(int16_t{ -10 }, i16);
 			Assert::IsTrue(extract(std::string{ "false" }, bool_));
