@@ -29,8 +29,8 @@ SOFTWARE.
 #include <iostream>
 #include <list>
 #include <map>
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <cctype>
 #include <sstream>
 
