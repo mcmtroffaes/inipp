@@ -25,15 +25,11 @@ SOFTWARE.
 #pragma once
 
 #include <iostream>
-#include <cstring>
-#include <string>
 #include <list>
 #include <map>
 #include <algorithm> 
 #include <functional> 
 #include <cctype>
-#include <locale>
-#include <codecvt>
 
 namespace inipp {
 
