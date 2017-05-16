@@ -39,7 +39,7 @@ namespace unittest
 			Assert::AreEqual(int16_t{ -10 }, i16);
 			Assert::IsFalse(extract(std::string{ "1000000" }, i16));
 			Assert::AreEqual(int16_t{ -10 }, i16);
-			Assert::IsTrue(extract(std::string{ "-20 xxx" }, i16));
+			Assert::IsFalse(extract(std::string{ "-20 xxx" }, i16));
 			Assert::AreEqual(int16_t{ -20 }, i16);
 			Assert::IsTrue(extract(std::string{ "1000000" }, i32));
 			Assert::AreEqual(int32_t{ 1000000 }, i32);
