@@ -74,6 +74,12 @@ static inline std::basic_string<CharT> literal(const char *value)
 	return result;
 }
 
+template <typename CharT, typename T>
+static inline bool extract(const std::basic_string<CharT> & value, T & dst) {
+	std::basic_istringstream<CharT> is{ value };
+	return bool{ is >> std::boolalpha >> dst };
+}
+
 template<class CharT>
 class Ini
 {
