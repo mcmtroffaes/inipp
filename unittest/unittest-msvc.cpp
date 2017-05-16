@@ -23,8 +23,8 @@ namespace unittest
 			int16_t           i16{ 0 };
 			int32_t           i32{ 0 };
 			bool              bool_{ true };
-			Assert::IsFalse(extract(std::string(), str));
-			Assert::AreEqual(std::string{ "oops" }, str);
+			Assert::IsTrue(extract(std::string(), str));
+			Assert::AreEqual(std::string{ }, str);
 			Assert::IsTrue(extract(std::string{ "hello" }, str));
 			Assert::AreEqual(std::string{ "hello" }, str);
 			Assert::IsTrue(extract(std::string{ "hello world" }, str));
