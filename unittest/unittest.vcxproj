@@ -162,7 +162,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="unittest-msvc.cpp" />
+    <ClCompile Include="unittest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />
