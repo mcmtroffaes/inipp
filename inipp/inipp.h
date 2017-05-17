@@ -78,7 +78,14 @@ template <typename CharT, typename T>
 inline bool extract(const std::basic_string<CharT> & value, T & dst) {
 	CharT c;
 	std::basic_istringstream<CharT> is{ value };
-	return bool{ is >> std::boolalpha >> dst && !(is >> c) };
+	T result;
+	if ((is >> std::boolalpha >> result) && !(is >> c)) {
+		dst = result;
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 template <typename CharT>
