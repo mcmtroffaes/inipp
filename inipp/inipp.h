@@ -53,25 +53,15 @@ static inline void rtrim(std::basic_string<CharT> & s) {
 // string replacement function based on http://stackoverflow.com/a/3418285
 
 template <class CharT>
-static inline void replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
+static inline bool replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
+	auto changed{ false };
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos) {
 		str.replace(start_pos, from.length(), to);
 		start_pos += to.length();
+		changed = true;
 	}
-}
-
-// template based string literals based on http://stackoverflow.com/a/32845111
-// cannot declare constexpr due to MSVC limitations
-
-template <typename CharT>
-static inline std::basic_string<CharT> literal(const char *value)
-{
-	std::basic_string<CharT> result{};
-	std::size_t length = std::strlen(value);
-	result.reserve(length);
-	for (int i=0; i < length; i++) result.push_back((CharT)value[i]);
-	return result;
+	return changed;
 }
 
 template <typename CharT, typename T>
@@ -111,12 +101,8 @@ public:
 	static const CharT char_comment        = (CharT)';';
 	static const CharT char_interpol       = (CharT)'%';
 	static const CharT char_interpol_start = (CharT)'(';
+	static const CharT char_interpol_sep   = (CharT)':';
 	static const CharT char_interpol_end   = (CharT)')';
-	const std::basic_string<CharT> default_section_name;
-
-	Ini()
-		: sections(), errors()
-		, default_section_name(literal<CharT>("DEFAULT")) {};
 
 	void generate(std::basic_ostream<CharT> & os) {
 		for (auto const & sec : sections) {
@@ -159,27 +145,33 @@ public:
 		}
 	}
 
-	void interpolate(const Section & src, Section & dst) const {
+	bool interpolate(const String & src_name, const Section & src, Section & dst) const {
+		auto changed{ false };
+		const String ext{ src_name + (src_name.empty() ? String{} : String{ char_interpol_sep }) };
 		for (auto & srcval : src) {
+			const String srcstr{ char_interpol + (char_interpol_start + ext + srcval.first + char_interpol_end) };
 			for (auto & val : dst) {
 				if (val != srcval) {
-					replace(val.second, char_interpol + (char_interpol_start + srcval.first + char_interpol_end), srcval.second);
+					changed |= replace(val.second, srcstr, srcval.second);
 				}
 			}
 		}
+		return changed;
 	}
 
 	void interpolate() {
-		auto defsec = sections.find(default_section_name);
-		if (defsec != sections.end())
-			interpolate(defsec->second, defsec->second);
-		for (auto & sec : sections) {
-			if (sec.first != default_section_name) {
-				interpolate(sec.second, sec.second);
-				if (defsec != sections.end())
-					interpolate(defsec->second, sec.second);
+		bool changed { false };
+		do {
+			for (auto & sec : sections) {
+				while(interpolate(String{}, sec.second, sec.second)) {};
 			}
-		}
+			changed = false;
+			for (auto & sec : sections) {
+				for (auto & other_sec : sections) {
+					changed |= interpolate(other_sec.first, other_sec.second, sec.second);
+				}
+			}
+		} while (changed);
 	}
 
 	void clear() {
