@@ -41,7 +41,7 @@ static inline auto test(const std::string & inifile, Ini<CharT> & ini) {
 }
 
 template <class CharT>
-static inline auto runtest(char *inifile, char *expectedfile, std::basic_ostream<CharT> & os) {
+static inline auto runtest(const char *inifile, const char *expectedfile, std::basic_ostream<CharT> & os) {
 	Ini<CharT> ini;
 	auto actual = test(inifile, ini);
 	auto expected = read_all<CharT>(expectedfile);
