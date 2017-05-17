@@ -54,7 +54,7 @@ static inline void rtrim(std::basic_string<CharT> & s) {
 
 template <class CharT>
 static inline bool replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
-	auto changed{ false };
+	auto changed = false;
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos) {
 		str.replace(start_pos, from.length(), to);
@@ -146,7 +146,7 @@ public:
 	}
 
 	bool interpolate(const String & src_name, const Section & src, Section & dst) const {
-		auto changed{ false };
+		auto changed = false;
 		const String ext{ src_name + (src_name.empty() ? String{} : String{ char_interpol_sep }) };
 		for (auto & srcval : src) {
 			const String srcstr{ char_interpol + (char_interpol_start + ext + srcval.first + char_interpol_end) };
@@ -160,7 +160,7 @@ public:
 	}
 
 	void interpolate() {
-		bool changed { false };
+		auto changed = false;
 		do {
 			for (auto & sec : sections) {
 				while(interpolate(String{}, sec.second, sec.second)) {};
