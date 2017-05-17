@@ -1,0 +1,7 @@
+add_executable(runtest unittest-cmake.cpp)
+add_executable(runtest2 unittest-msvc.cpp)
+add_executable(headertest headertest.cpp)
+add_test(test0 headertest)
+add_test(test1 runtest test1.ini test1.output)
+add_test(test2 runtest test2.ini test2.output)
+add_test(test3 runtest2)

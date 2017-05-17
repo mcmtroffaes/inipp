@@ -1,7 +1,27 @@
 #include "test.h"
-#include "CppUnitTest.h"
 
+#ifdef _MSC_VER
+#include "CppUnitTest.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+#else
+#define TEST_CLASS(T) class T
+#define TEST_METHOD(Func) void Func()
+// we abuse assert
+#define NDEBUG
+#include <cassert>
+namespace Assert {
+void IsTrue(bool result) {
+	assert(result);
+}
+void IsFalse(bool result) {
+	assert(!result);
+}
+template <typename T>
+void AreEqual(const T & a, const T & b) {
+	assert(a == b);
+}
+}
+#endif
 
 namespace unittest
 {		
@@ -46,3 +66,12 @@ namespace unittest
 		}
 	};
 }
+
+#ifndef _MSC_VER
+int main() {
+	unittest::UnitTest test;
+	test.TestParseGenerate();
+	test.TestExtract();
+	return 0;
+}
+#endif
