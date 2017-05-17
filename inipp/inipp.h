@@ -99,10 +99,10 @@ public:
 	static const CharT char_section_end    = (CharT)']';
 	static const CharT char_assign         = (CharT)'=';
 	static const CharT char_comment        = (CharT)';';
-	static const CharT char_interpol       = (CharT)'%';
-	static const CharT char_interpol_start = (CharT)'(';
+	static const CharT char_interpol       = (CharT)'$';
+	static const CharT char_interpol_start = (CharT)'{';
 	static const CharT char_interpol_sep   = (CharT)':';
-	static const CharT char_interpol_end   = (CharT)')';
+	static const CharT char_interpol_end   = (CharT)'}';
 
 	void generate(std::basic_ostream<CharT> & os) {
 		for (auto const & sec : sections) {

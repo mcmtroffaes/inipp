@@ -3,7 +3,7 @@
 [section0]
 a=hello
 b=world
-test=%(a) %(b)
+test=${a} ${b}
 [section1]
 var1=val1
 var2=val2
@@ -12,9 +12,9 @@ var4=val4
 var5=val5
 [section2]
 b=monkey
-x=%(section0:test)
-y=%(var1)
-z=%(x) + %(y) + %(section0:a) + %(b)
+x=${section0:test}
+y=${var1}
+z=${x} + ${y} + ${section0:a} + ${b}
 >>> INTERPOLATE <<<
 [section0]
 a=hello
@@ -29,5 +29,5 @@ var5=val5
 [section2]
 b=monkey
 x=hello world
-y=%(var1)
-z=hello world + %(var1) + hello + monkey
+y=${var1}
+z=hello world + ${var1} + hello + monkey
