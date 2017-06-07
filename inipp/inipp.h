@@ -145,38 +145,57 @@ public:
 		}
 	}
 
-	bool interpolate(const String & src_name, const Section & src, Section & dst) const {
-		auto changed = false;
-		const String ext{ src_name + (src_name.empty() ? String{} : String{ char_interpol_sep }) };
-		for (auto & srcval : src) {
-			const String srcstr{ char_interpol + (char_interpol_start + ext + srcval.first + char_interpol_end) };
-			for (auto & val : dst) {
-				if (val != srcval) {
-					changed |= replace(val.second, srcstr, srcval.second);
-				}
-			}
-		}
-		return changed;
-	}
-
 	void interpolate() {
 		auto changed = false;
+		Section global_sec;
 		do {
-			for (auto & sec : sections) {
-				while(interpolate(String{}, sec.second, sec.second)) {};
-			}
+			for (auto & sec : sections)
+				while(replace_symbols(local_symbols(sec.second), sec.second)) {};
 			changed = false;
-			for (auto & sec : sections) {
-				for (auto & other_sec : sections) {
-					changed |= interpolate(other_sec.first, other_sec.second, sec.second);
-				}
-			}
+			const auto syms = global_symbols();
+			for (auto & sec : sections)
+				changed |= replace_symbols(syms, sec.second);
 		} while (changed);
 	}
 
 	void clear() {
 		sections.clear();
 		errors.clear();
+	}
+
+private:
+	typedef std::list<std::pair<String, String> > Symbols;
+
+	auto local_symbol(const String & name) const {
+		return char_interpol + (char_interpol_start + name + char_interpol_end);
+	}
+
+	auto global_symbol(const String & sec_name, const String & name) const {
+		return local_symbol(sec_name + char_interpol_sep + name);
+	}
+
+	auto local_symbols(const Section & sec) const {
+		Symbols result;
+		for (const auto & val : sec)
+			result.push_back(std::make_pair(local_symbol(val.first), val.second));
+		return result;
+	}
+
+	auto global_symbols() const {
+		Symbols result;
+		for (const auto & sec : sections)
+			for (const auto & val : sec.second)
+				result.push_back(
+					std::make_pair(global_symbol(sec.first, val.first), val.second));
+		return result;
+	}
+
+	bool replace_symbols(const Symbols & syms, Section & sec) const {
+		auto changed = false;
+		for (auto & sym : syms)
+			for (auto & val : sec)
+				changed |= replace(val.second, sym.first, sym.second);
+		return changed;
 	}
 };
 
