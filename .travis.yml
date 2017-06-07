@@ -6,5 +6,5 @@ addons:
     packages: ['g++-4.9']
 install:
   - export CXX="g++-4.9"
-  - export CXXFLAGS="-g -std=c++11 -Wall -pedantic"
+  - export CXXFLAGS="-g -std=c++1y -Wall -pedantic"
 script: cmake . && make && make test
