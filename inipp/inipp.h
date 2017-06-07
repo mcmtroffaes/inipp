@@ -155,6 +155,7 @@ public:
 			for (auto & sec : sections) {
 				int local_iteration = 0;
 				while(replace_symbols(local_symbols(sec.second), sec.second) && (max_interpolation_depth > local_iteration++)) {};
+				global_iteration = std::max(global_iteration, local_iteration);
 			}
 			changed = false;
 			const auto syms = global_symbols();
