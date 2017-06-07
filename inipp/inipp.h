@@ -104,6 +104,8 @@ public:
 	static const CharT char_interpol_sep   = (CharT)':';
 	static const CharT char_interpol_end   = (CharT)'}';
 
+	static const int max_interpolation_depth = 10;
+
 	void generate(std::basic_ostream<CharT> & os) {
 		for (auto const & sec : sections) {
 			os << char_section_start << sec.first << char_section_end << std::endl;
@@ -146,16 +148,20 @@ public:
 	}
 
 	void interpolate() {
+		int global_iteration = 0;
 		auto changed = false;
 		Section global_sec;
 		do {
-			for (auto & sec : sections)
-				while(replace_symbols(local_symbols(sec.second), sec.second)) {};
+			for (auto & sec : sections) {
+				int local_iteration = 0;
+				while(replace_symbols(local_symbols(sec.second), sec.second) && (max_interpolation_depth > local_iteration++)) {};
+				global_iteration = std::max(global_iteration, local_iteration);
+			}
 			changed = false;
 			const auto syms = global_symbols();
 			for (auto & sec : sections)
 				changed |= replace_symbols(syms, sec.second);
-		} while (changed);
+		} while (changed && (max_interpolation_depth > global_iteration++));
 	}
 
 	void clear() {

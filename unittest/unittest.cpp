@@ -38,6 +38,35 @@ namespace unittest
 			Assert::IsTrue(runtest<wchar_t>("test2.ini", "test2.output", std::wcout));
 		}
 
+		TEST_METHOD(TestInfiniteRecursion1)
+		{
+			Ini<char> ini;
+			ini.sections["test"]["x"] = "0 ${y}";
+			ini.sections["test"]["y"] = "1 ${x}";
+			ini.interpolate();
+			ini.generate(std::cout);
+		}
+
+		TEST_METHOD(TestInfiniteRecursion2)
+		{
+			Ini<char> ini;
+			ini.sections["test1"]["x"] = "0 ${test2:y}";
+			ini.sections["test2"]["y"] = "1 ${test1:x}";
+			ini.interpolate();
+			ini.generate(std::cout);
+		}
+
+		TEST_METHOD(TestInfiniteRecursion3)
+		{
+			Ini<char> ini;
+			ini.sections["test1"]["x"] = "${test2:x}";
+			ini.sections["test2"]["x"] = "${test3:x}";
+			ini.sections["test3"]["x"] = "${test4:x}";
+			ini.sections["test4"]["x"] = "x${test1:x}";
+			ini.interpolate();
+			ini.generate(std::cout);
+		}
+
 		TEST_METHOD(TestExtract)
 		{
 			std::string       str{ "oops" };
@@ -72,6 +101,9 @@ namespace unittest
 int main() {
 	unittest::UnitTest test;
 	test.TestParseGenerate();
+	test.TestInfiniteRecursion1();
+	test.TestInfiniteRecursion2();
+	test.TestInfiniteRecursion3();
 	test.TestExtract();
 	return 0;
 }
