@@ -1,5 +1,10 @@
 dist: trusty
 language: cpp
+addons:
+  apt:
+    sources: ['ubuntu-toolchain-r-test']
+    packages: ['g++-4.9']
 install:
-  - export CXXFLAGS="-g -std=c++11 -Wall -pedantic"
+  - export CXX="g++-4.9"
+  - export CXXFLAGS="-g -std=c++1y -Wall -pedantic"
 script: cmake . && make && make test
