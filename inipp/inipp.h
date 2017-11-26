@@ -132,8 +132,10 @@ public:
 				else if (front == char_section_start) {
 					if (line.back() == char_section_end)
 						section = line.substr(1, length - 2);
+					else
+						errors.push_back(line);
 				}
-				else if (pos != String::npos) {
+				else if (pos != 0 && pos != String::npos) {
 					String variable(line.substr(0, pos));
 					String value(line.substr(pos + 1, length));
 					rtrim(variable);

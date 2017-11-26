@@ -85,6 +85,13 @@ namespace unittest
 			Logger::WriteMessage(os.str().c_str());
 		}
 
+		TEST_METHOD(TestParseGenerate4)
+		{
+			std::basic_ostringstream<char> os;
+			Assert::IsTrue(runtest<char>("test4.ini", "test4.output", os));
+			Logger::WriteMessage(os.str().c_str());
+		}
+
 		TEST_METHOD(TestInfiniteRecursion1)
 		{
 			Ini<char> ini;
@@ -168,6 +175,7 @@ int main() {
 	test.TestParseGenerate2();
 	test.TestParseGenerate2W();
 	test.TestParseGenerate3();
+	test.TestParseGenerate4();
 	test.TestInfiniteRecursion1();
 	test.TestInfiniteRecursion2();
 	test.TestInfiniteRecursion3();

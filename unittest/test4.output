@@ -1,0 +1,18 @@
+>>> ERRORS <<<
+[badsec
+badsec]
+=badvar
+=
+bla
+>>> GENERATE <<<
+[]
+a=1
+b=3
+c=${:a}
+d=${:e}
+>>> INTERPOLATE <<<
+[]
+a=1
+b=3
+c=1
+d=${:e}
