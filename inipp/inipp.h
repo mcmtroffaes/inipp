@@ -147,16 +147,15 @@ public:
 		}
 	}
 
+	void resolve() {
+		for (auto & sec : sections)
+			replace_symbols(local_symbols(sec.first, sec.second), sec.second);
+	}
+
 	void interpolate() {
 		int global_iteration = 0;
 		auto changed = false;
-		Section global_sec;
 		do {
-			for (auto & sec : sections) {
-				int local_iteration = 0;
-				while(replace_symbols(local_symbols(sec.second), sec.second) && (max_interpolation_depth > local_iteration++)) {};
-				global_iteration = std::max(global_iteration, local_iteration);
-			}
 			changed = false;
 			const auto syms = global_symbols();
 			for (auto & sec : sections)
@@ -180,10 +179,10 @@ private:
 		return local_symbol(sec_name + char_interpol_sep + name);
 	}
 
-	auto local_symbols(const Section & sec) const {
+	auto local_symbols(const String & sec_name, const Section & sec) const {
 		Symbols result;
 		for (const auto & val : sec)
-			result.push_back(std::make_pair(local_symbol(val.first), val.second));
+			result.push_back(std::make_pair(local_symbol(val.first), global_symbol(sec_name, val.first)));
 		return result;
 	}
 

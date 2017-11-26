@@ -34,7 +34,8 @@ static inline auto test(const std::string & inifile, Ini<CharT> & ini) {
 	errors(os, ini);
 	os << ">>> GENERATE <<<" << std::endl;
 	ini.generate(os);
-	os << ">>> INTERPOLATE <<<" << std::endl;
+	os << ">>> RESOLVE + INTERPOLATE <<<" << std::endl;
+	ini.resolve();
 	ini.interpolate();
 	ini.generate(os);
 	return os.str();
