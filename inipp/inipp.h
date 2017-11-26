@@ -106,7 +106,7 @@ public:
 
 	static const int max_interpolation_depth = 10;
 
-	void generate(std::basic_ostream<CharT> & os) {
+	void generate(std::basic_ostream<CharT> & os) const {
 		for (auto const & sec : sections) {
 			os << char_section_start << sec.first << char_section_end << std::endl;
 			for (auto const & val : sec.second) {
@@ -160,6 +160,12 @@ public:
 			for (auto & sec : sections)
 				changed |= replace_symbols(syms, sec.second);
 		} while (changed && (max_interpolation_depth > global_iteration++));
+	}
+
+	void default_section(const Section & sec) {
+		for (auto & sec2 : sections)
+			for (const auto & val : sec)
+				sec2.second.insert(val);
 	}
 
 	void clear() {
