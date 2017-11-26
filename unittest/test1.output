@@ -2,6 +2,6 @@
 >>> GENERATE <<<
 [section]
 variable=value
->>> RESOLVE + INTERPOLATE <<<
+>>> INTERPOLATE <<<
 [section]
 variable=value

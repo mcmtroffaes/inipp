@@ -147,14 +147,13 @@ public:
 		}
 	}
 
-	void resolve() {
-		for (auto & sec : sections)
-			replace_symbols(local_symbols(sec.first, sec.second), sec.second);
-	}
-
 	void interpolate() {
 		int global_iteration = 0;
 		auto changed = false;
+		// replace each "${variable}" by "${section:variable}"
+		for (auto & sec : sections)
+			replace_symbols(local_symbols(sec.first, sec.second), sec.second);
+		// replace each "${section:variable}" by its value
 		do {
 			changed = false;
 			const auto syms = global_symbols();

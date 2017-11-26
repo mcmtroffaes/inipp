@@ -73,7 +73,7 @@ medium_audiocodec=-c:a aac -b:a 192k
 medium_container=mkv
 medium_filter=-vf scale=-1:720
 medium_videocodec=-c:v libx264 -crf 23
->>> RESOLVE + INTERPOLATE <<<
+>>> INTERPOLATE <<<
 [batch]
 audioinput=-f s16le -ar 44100 -ac 2 -i "d:\export-20171126-raw-audio.raw"
 batchfile=d:\export-20171126-run-encoder.bat

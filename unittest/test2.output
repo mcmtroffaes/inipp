@@ -20,7 +20,7 @@ a=wot
 b=yz
 c=tis
 d=${section0:test}
->>> RESOLVE + INTERPOLATE <<<
+>>> INTERPOLATE <<<
 [section0]
 a=hello
 b=world
