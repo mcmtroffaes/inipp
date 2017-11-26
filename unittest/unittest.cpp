@@ -139,7 +139,10 @@ namespace unittest
 #ifndef _MSC_VER
 int main() {
 	unittest::UnitTest test;
-	test.TestParseGenerate();
+	test.TestParseGenerate1();
+	test.TestParseGenerate1W();
+	test.TestParseGenerate2();
+	test.TestParseGenerate2W();
 	test.TestInfiniteRecursion1();
 	test.TestInfiniteRecursion2();
 	test.TestInfiniteRecursion3();
