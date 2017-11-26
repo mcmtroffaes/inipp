@@ -6,6 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #else
 #define TEST_CLASS(T) class T
 #define TEST_METHOD(Func) void Func()
+
 namespace Assert {
 
 	void IsTrue(bool result) {
@@ -22,6 +23,18 @@ namespace Assert {
 	}
 
 } // namespace Assert
+
+namespace Logger {
+
+	void WriteMessage(const char *msg) {
+		std::wcout << msg;
+	}
+
+	void WriteMessage(const wchar_t *msg) {
+		std::wcout << msg;
+	}
+
+} // namespace Logger
 #endif
 
 namespace unittest
@@ -30,41 +43,67 @@ namespace unittest
 	{
 	public:
 		
-		TEST_METHOD(TestParseGenerate)
+		TEST_METHOD(TestParseGenerate1)
 		{
-			Assert::IsTrue(runtest<char>("test1.ini", "test1.output", std::cout));
-			Assert::IsTrue(runtest<wchar_t>("test1.ini", "test1.output", std::wcout));
-			Assert::IsTrue(runtest<char>("test2.ini", "test2.output", std::cout));
-			Assert::IsTrue(runtest<wchar_t>("test2.ini", "test2.output", std::wcout));
+			std::basic_ostringstream<char> os;
+			Assert::IsTrue(runtest<char>("test1.ini", "test1.output", os));
+			Logger::WriteMessage(os.str().c_str());
+		}
+
+		TEST_METHOD(TestParseGenerate1W)
+		{
+			std::basic_ostringstream<wchar_t> os;
+			Assert::IsTrue(runtest<wchar_t>("test1.ini", "test1.output", os));
+			Logger::WriteMessage(os.str().c_str());
+		}
+
+		TEST_METHOD(TestParseGenerate2)
+		{
+			std::basic_ostringstream<char> os;
+			Assert::IsTrue(runtest<char>("test2.ini", "test2.output", os));
+			Logger::WriteMessage(os.str().c_str());
+		}
+
+		TEST_METHOD(TestParseGenerate2W)
+		{
+			std::basic_ostringstream<wchar_t> os;
+			Assert::IsTrue(runtest<wchar_t>("test2.ini", "test2.output", os));
+			Logger::WriteMessage(os.str().c_str());
 		}
 
 		TEST_METHOD(TestInfiniteRecursion1)
 		{
+			std::basic_ostringstream<char> os;
 			Ini<char> ini;
 			ini.sections["test"]["x"] = "0 ${y}";
 			ini.sections["test"]["y"] = "1 ${x}";
 			ini.interpolate();
-			ini.generate(std::cout);
+			ini.generate(os);
+			Logger::WriteMessage(os.str().c_str());
 		}
 
 		TEST_METHOD(TestInfiniteRecursion2)
 		{
+			std::basic_ostringstream<char> os;
 			Ini<char> ini;
 			ini.sections["test1"]["x"] = "0 ${test2:y}";
 			ini.sections["test2"]["y"] = "1 ${test1:x}";
 			ini.interpolate();
-			ini.generate(std::cout);
+			ini.generate(os);
+			Logger::WriteMessage(os.str().c_str());
 		}
 
 		TEST_METHOD(TestInfiniteRecursion3)
 		{
+			std::basic_ostringstream<char> os;
 			Ini<char> ini;
 			ini.sections["test1"]["x"] = "${test2:x}";
 			ini.sections["test2"]["x"] = "${test3:x}";
 			ini.sections["test3"]["x"] = "${test4:x}";
 			ini.sections["test4"]["x"] = "x${test1:x}";
 			ini.interpolate();
-			ini.generate(std::cout);
+			ini.generate(os);
+			Logger::WriteMessage(os.str().c_str());
 		}
 
 		TEST_METHOD(TestExtract)
@@ -100,7 +139,10 @@ namespace unittest
 #ifndef _MSC_VER
 int main() {
 	unittest::UnitTest test;
-	test.TestParseGenerate();
+	test.TestParseGenerate1();
+	test.TestParseGenerate1W();
+	test.TestParseGenerate2();
+	test.TestParseGenerate2W();
 	test.TestInfiniteRecursion1();
 	test.TestInfiniteRecursion2();
 	test.TestInfiniteRecursion3();
