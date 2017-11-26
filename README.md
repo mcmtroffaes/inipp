@@ -16,7 +16,7 @@ Simple header-only C++ ini parser and generator.
 
 ## Example
 
-```
+```cpp
 #include <fstream>
 #include "inipp.h"
 
