@@ -128,7 +128,7 @@ width=1920
 [export]
 audio=d:\export-20171126-raw-audio.raw
 base=d:\export-20171126
-folder=d:\
+folder=d:
 video=d:\export-20171126-raw-video.yuv
 [presets]
 high_audiocodec=-c:a aac -b:a 384k
