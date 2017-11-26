@@ -2,15 +2,15 @@
 <package>
   <metadata>
     <id>IniPP</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <authors>Matthias C. M. Troffaes</authors>
     <owners>Matthias C. M. Troffaes</owners>
     <projectUrl>https://github.com/mcmtroffaes/inipp</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/mcmtroffaes/inipp/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Simple header-only C++ ini parser, with support for interpolation similar to Python's configparser.</description>
+    <description>Simple header-only C++ ini parser, with support for default section and interpolation similar to Python's configparser.</description>
     <summary>Simple C++ ini parser.</summary>
-    <releaseNotes>Fix subtle interpolate bug.</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>ini parser native nativepackage</tags>
   </metadata>
