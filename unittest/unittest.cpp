@@ -27,11 +27,11 @@ namespace Assert {
 namespace Logger {
 
 	void WriteMessage(const char *msg) {
-		std:wcout << msg;
+		std::wcout << msg;
 	}
 
 	void WriteMessage(const wchar_t *msg) {
-		std:wcout << msg;
+		std::wcout << msg;
 	}
 
 } // namespace Logger
