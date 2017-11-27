@@ -92,6 +92,18 @@ namespace unittest
 			Logger::WriteMessage(os.str().c_str());
 		}
 
+		TEST_METHOD(TestInterpolate1)
+		{
+			Ini<char> ini;
+			ini.sections["sec1"]["x"] = "${sec2:z}";
+			ini.sections["sec1"]["y"] = "2";
+			ini.sections["sec2"]["z"] = "${y}";
+			ini.interpolate();
+			// we do not want x to be 2
+			Assert::AreEqual(ini.sections.at("sec1").at("x"), std::string("${y}"));
+			ini.generate(std::cout);
+		}
+
 		TEST_METHOD(TestInfiniteRecursion1)
 		{
 			Ini<char> ini;
@@ -158,11 +170,11 @@ namespace unittest
 			ini.sections["sec1"]["c"] = "${a} ${b}";
 			ini.sections["sec2"]["a"] = "3";
 			ini.sections["sec2"]["c"] = "${a} ${b}";
-			ini.default_section(ini.sections["sec0"]);
+			ini.default_section(ini.sections.at("sec0"));
 			ini.interpolate();
 			WriteMessage(ini);
-			Assert::AreEqual(ini.sections["sec1"]["c"], std::string("0 2"));
-			Assert::AreEqual(ini.sections["sec2"]["c"], std::string("3 1"));
+			Assert::AreEqual(ini.sections.at("sec1").at("c"), std::string("0 2"));
+			Assert::AreEqual(ini.sections.at("sec2").at("c"), std::string("3 1"));
 		}
 	};
 } // namespace unittest
@@ -179,6 +191,7 @@ int main() {
 	test.TestInfiniteRecursion1();
 	test.TestInfiniteRecursion2();
 	test.TestInfiniteRecursion3();
+	test.TestInterpolate1();
 	test.TestExtract();
 	test.TestDefault();
 	return 0;
