@@ -36,37 +36,37 @@ SOFTWARE.
 
 namespace inipp {
 
-	namespace detail {
+namespace detail {
 
-	// trim functions based on http://stackoverflow.com/a/217605
+// trim functions based on http://stackoverflow.com/a/217605
 
-	template <class CharT>
-	static inline void ltrim(std::basic_string<CharT> & s) {
-		s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-			std::not1(std::ptr_fun<int, int>(std::isspace))));
+template <class CharT>
+inline void ltrim(std::basic_string<CharT> & s) {
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+		std::not1(std::ptr_fun<int, int>(std::isspace))));
+}
+
+template <class CharT>
+inline void rtrim(std::basic_string<CharT> & s) {
+	s.erase(std::find_if(s.rbegin(), s.rend(),
+		std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+}
+
+// string replacement function based on http://stackoverflow.com/a/3418285
+
+template <class CharT>
+inline bool replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
+	auto changed = false;
+	size_t start_pos = 0;
+	while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length();
+		changed = true;
 	}
+	return changed;
+}
 
-	template <class CharT>
-	static inline void rtrim(std::basic_string<CharT> & s) {
-		s.erase(std::find_if(s.rbegin(), s.rend(),
-			std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-	}
-
-	// string replacement function based on http://stackoverflow.com/a/3418285
-
-	template <class CharT>
-	static inline bool replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to) {
-		auto changed = false;
-		size_t start_pos = 0;
-		while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos) {
-			str.replace(start_pos, from.length(), to);
-			start_pos += to.length();
-			changed = true;
-		}
-		return changed;
-	}
-
-	} // namespace detail
+} // namespace detail
 
 template <typename CharT, typename T>
 inline bool extract(const std::basic_string<CharT> & value, T & dst) {
