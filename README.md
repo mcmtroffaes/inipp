@@ -37,6 +37,26 @@ int main() {
 }
 ```
 
+## Parsing algorithm
+
+* The *section* is set to the empty string.
+
+* Every *line* is read from the file and trimmed from whitespace.
+
+    * If *line* is empty or starts with ``;`` then nothing happens.
+
+    * If *line* starts with ``[`` then *section* is changed to the
+      string between ``[`` and ``]``. If *line* does not end with
+      ``]`` then an error is reported.
+
+    * If *line* contains an ``=`` sign, then all characters before
+      ``=`` are treated as *variable* and all characters following
+      ``=`` are treated as *value*. Both are trimmed. If the variable
+      was already assigned earlier, an error is reported. Otherwise,
+      the corresponding assigment is added to the *section*.
+
+    * The *line* is reported as an error.
+
 ## Default section algorithm
 
 Insert every variable from the default section into every other section, without overwriting existing variables.
