@@ -45,17 +45,18 @@ int main() {
 
     * If *line* is empty or starts with ``;`` then nothing happens.
 
-    * If *line* starts with ``[`` then *section* is changed to the
-      string between ``[`` and ``]``. If *line* does not end with
-      ``]`` then an error is reported.
+    * Otherwise, if *line* starts with ``[`` then *section* is changed
+      to the string between ``[`` and ``]``. If *line* does not end
+      with ``]`` then an error is reported.
 
-    * If *line* contains an ``=`` sign, then all characters before
-      ``=`` are treated as *variable* and all characters following
-      ``=`` are treated as *value*. Both are trimmed. If the variable
-      was already assigned earlier, an error is reported. Otherwise,
-      the corresponding assigment is added to the *section*.
+    * Otherwise, if *line* contains an ``=`` sign, then all characters
+      before ``=`` are treated as *variable* and all characters
+      following ``=`` are treated as *value*. Both are trimmed. If the
+      variable was already assigned earlier, an error is
+      reported. Otherwise, the corresponding assigment is added to the
+      *section*.
 
-    * The *line* is reported as an error.
+    * Otherwise, the *line* is reported as an error.
 
 ## Default section algorithm
 
