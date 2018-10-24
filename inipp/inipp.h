@@ -144,7 +144,7 @@ public:
 					String value(line.substr(pos + 1, length));
 					detail::rtrim(variable);
 					detail::ltrim(value);
-					sections[section][variable] = value;
+					sections[section].insert(std::make_pair(variable, value));
 				}
 				else {
 					errors.push_back(line);
