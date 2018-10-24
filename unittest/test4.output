@@ -4,6 +4,7 @@ badsec]
 =badvar
 =
 bla
+b=3
 >>> GENERATE <<<
 []
 a=1

@@ -144,7 +144,11 @@ public:
 					String value(line.substr(pos + 1, length));
 					detail::rtrim(variable);
 					detail::ltrim(value);
-					sections[section].insert(std::make_pair(variable, value));
+					auto & sec = sections[section];
+					if (sec.find(variable) == sec.end())
+						sec.insert(std::make_pair(variable, value));
+					else
+						errors.push_back(line);
 				}
 				else {
 					errors.push_back(line);
