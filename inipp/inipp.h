@@ -126,7 +126,7 @@ public:
 			std::getline(is, line);
 			detail::ltrim(line);
 			detail::rtrim(line);
-			auto length = line.length();
+			const auto length = line.length();
 			if (length > 0) {
 				const auto pos = line.find_first_of(char_assign);
 				const auto & front = line.front();
