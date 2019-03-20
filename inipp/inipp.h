@@ -42,14 +42,16 @@ namespace detail {
 
 template <class CharT>
 inline void ltrim(std::basic_string<CharT> & s) {
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-		std::not1(std::ptr_fun<int, int>(std::isspace))));
+	s.erase(s.begin(),
+                std::find_if(s.begin(), s.end(),
+                             [](int ch) { return !std::isspace(ch); }));
 }
 
 template <class CharT>
 inline void rtrim(std::basic_string<CharT> & s) {
 	s.erase(std::find_if(s.rbegin(), s.rend(),
-		std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+                             [](int ch) { return !std::isspace(ch); }).base(),
+                s.end());
 }
 
 // string replacement function based on http://stackoverflow.com/a/3418285
