@@ -11,7 +11,7 @@
     <description>Simple header-only C++ ini parser, with support for default section and interpolation similar to Python's configparser.</description>
     <summary>Simple C++ ini parser.</summary>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2017</copyright>
+    <copyright>Copyright 2017-2019</copyright>
     <tags>ini parser native nativepackage</tags>
   </metadata>
   <files>
