@@ -112,6 +112,10 @@ public:
 
 	static const int max_interpolation_depth = 10;
 
+	Section operator[](String section){
+		return this->sections[section];
+	}
+
 	void generate(std::basic_ostream<CharT> & os) const {
 		for (auto const & sec : sections) {
 			os << char_section_start << sec.first << char_section_end << std::endl;

@@ -12,7 +12,7 @@ int main() {
 	std::cout << "ini file after default section and interpolation:" << std::endl;
 	ini.generate(std::cout);
 	int compression_level = -1;
-	inipp::extract(ini.sections["bitbucket.org"]["CompressionLevel"], compression_level);
+	inipp::extract(ini["bitbucket.org"]["CompressionLevel"], compression_level);
 	std::cout << "bitbucket.org compression level: " << compression_level << std::endl;
 	return 0;
 }
