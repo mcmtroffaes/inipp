@@ -124,8 +124,11 @@ public:
 	void parse(std::basic_istream<CharT> & is) {
 		String line;
 		String section;
-		while (!is.eof()) {
+		while (true) {
 			std::getline(is, line);
+			if (is.eof() || is.fail()) {
+				break;
+			}
 			detail::ltrim(line);
 			detail::rtrim(line);
 			const auto length = line.length();
