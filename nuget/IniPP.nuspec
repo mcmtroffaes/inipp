@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>IniPP</id>
-    <version>1.0.8</version>
+    <version>1.0.10</version>
     <authors>Matthias C. M. Troffaes</authors>
     <owners>Matthias C. M. Troffaes</owners>
     <projectUrl>https://github.com/mcmtroffaes/inipp</projectUrl>
@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple header-only C++ ini parser, with support for default section and interpolation similar to Python's configparser.</description>
     <summary>Simple C++ ini parser.</summary>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>Update for C++17 compliance, fix potential infinite loop when reading from bad file, do not overwrite variables.</releaseNotes>
     <copyright>Copyright 2017-2019</copyright>
     <tags>ini parser native nativepackage</tags>
   </metadata>
