@@ -41,6 +41,7 @@ preset1=low
 preset2=medium
 preset3=high
 videoinput=-f rawvideo -pix_fmt ${builtin:video_format} -s:v ${builtin:width}x${builtin:height} -r ${builtin:framerate_numerator}/${builtin:framerate_denominator} -i "${export:video}"
+
 [builtin]
 audio_format=s16le
 audio_num_channels=2
@@ -51,11 +52,13 @@ height=1080
 timestamp=20171126
 video_format=nv12
 width=1920
+
 [export]
 audio=${base}-raw-audio.raw
 base=${folder}\export-${builtin:timestamp}
 folder=d:
 video=${base}-raw-video.yuv
+
 [presets]
 high_audiocodec=-c:a aac -b:a 384k
 high_container=mkv
@@ -73,6 +76,7 @@ medium_audiocodec=-c:a aac -b:a 192k
 medium_container=mkv
 medium_filter=-vf scale=-1:720
 medium_videocodec=-c:v libx264 -crf 23
+
 >>> INTERPOLATE <<<
 [batch]
 audioinput=-f s16le -ar 44100 -ac 2 -i "d:\export-20171126-raw-audio.raw"
@@ -115,6 +119,7 @@ preset1=low
 preset2=medium
 preset3=high
 videoinput=-f rawvideo -pix_fmt nv12 -s:v 1920x1080 -r 30000/1001 -i "d:\export-20171126-raw-video.yuv"
+
 [builtin]
 audio_format=s16le
 audio_num_channels=2
@@ -125,11 +130,13 @@ height=1080
 timestamp=20171126
 video_format=nv12
 width=1920
+
 [export]
 audio=d:\export-20171126-raw-audio.raw
 base=d:\export-20171126
 folder=d:
 video=d:\export-20171126-raw-video.yuv
+
 [presets]
 high_audiocodec=-c:a aac -b:a 384k
 high_container=mkv
@@ -147,3 +154,4 @@ medium_audiocodec=-c:a aac -b:a 192k
 medium_container=mkv
 medium_filter=-vf scale=-1:720
 medium_videocodec=-c:v libx264 -crf 23
+

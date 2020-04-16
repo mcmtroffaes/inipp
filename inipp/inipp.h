@@ -118,6 +118,7 @@ public:
 			for (auto const & val : sec.second) {
 				os << val.first << char_assign << val.second << std::endl;
 			}
+			os << std::endl;
 		}
 	}
 
