@@ -44,13 +44,13 @@ template <class CharT>
 inline void ltrim(std::basic_string<CharT> & s) {
 	s.erase(s.begin(),
                 std::find_if(s.begin(), s.end(),
-                             [](int ch) { return !std::isspace(ch); }));
+                             [](int ch) { return ch < -1 ? true : !std::isspace(ch); }));
 }
 
 template <class CharT>
 inline void rtrim(std::basic_string<CharT> & s) {
 	s.erase(std::find_if(s.rbegin(), s.rend(),
-                             [](int ch) { return !std::isspace(ch); }).base(),
+                             [](int ch) { return ch < -1 ? true : !std::isspace(ch); }).base(),
                 s.end());
 }
 
