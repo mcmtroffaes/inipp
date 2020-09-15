@@ -28,6 +28,7 @@ SOFTWARE.
 #include <string>
 #include <iostream>
 #include <list>
+#include <locale>
 #include <map>
 #include <algorithm>
 #include <functional>
@@ -41,16 +42,16 @@ namespace detail {
 // trim functions based on http://stackoverflow.com/a/217605
 
 template <class CharT>
-inline void ltrim(std::basic_string<CharT> & s) {
+inline void ltrim(std::basic_string<CharT> & s, const std::locale & loc) {
 	s.erase(s.begin(),
                 std::find_if(s.begin(), s.end(),
-                             [](int ch) { return !std::isspace(ch); }));
+                             [&loc](CharT ch) { return !std::isspace(ch, loc); }));
 }
 
 template <class CharT>
-inline void rtrim(std::basic_string<CharT> & s) {
+inline void rtrim(std::basic_string<CharT> & s, const std::locale & loc) {
 	s.erase(std::find_if(s.rbegin(), s.rend(),
-                             [](int ch) { return !std::isspace(ch); }).base(),
+                             [&loc](CharT ch) { return !std::isspace(ch, loc); }).base(),
                 s.end());
 }
 
@@ -125,9 +126,10 @@ public:
 	void parse(std::basic_istream<CharT> & is) {
 		String line;
 		String section;
+		const std::locale loc{"C"};
 		while (std::getline(is, line)) {
-			detail::ltrim(line);
-			detail::rtrim(line);
+			detail::ltrim(line, loc);
+			detail::rtrim(line, loc);
 			const auto length = line.length();
 			if (length > 0) {
 				const auto pos = line.find_first_of(char_assign);
@@ -144,8 +146,8 @@ public:
 				else if (pos != 0 && pos != String::npos) {
 					String variable(line.substr(0, pos));
 					String value(line.substr(pos + 1, length));
-					detail::rtrim(variable);
-					detail::ltrim(value);
+					detail::rtrim(variable, loc);
+					detail::ltrim(value, loc);
 					auto & sec = sections[section];
 					if (sec.find(variable) == sec.end())
 						sec.insert(std::make_pair(variable, value));
