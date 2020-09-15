@@ -1,4 +1,5 @@
 version: 1.0.{build}
+image: Visual Studio 2019
 build_script:
   - msbuild inipp.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - nuget pack nuget/IniPP.nuspec
