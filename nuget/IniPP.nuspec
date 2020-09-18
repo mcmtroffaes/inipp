@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple header-only C++ ini parser, with support for default section and interpolation similar to Python's configparser.</description>
     <summary>Simple C++ ini parser.</summary>
-    <releaseNotes>Fixed trim functions for wide character input.</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright 2017-2020</copyright>
     <tags>ini parser native nativepackage</tags>
   </metadata>
