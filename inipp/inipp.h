@@ -24,6 +24,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <array>
 #include <cstring>
 #include <string>
 #include <iostream>
@@ -102,14 +103,15 @@ public:
 	Sections sections;
 	std::list<String> errors;
 
-	static const CharT char_section_start  = (CharT)'[';
-	static const CharT char_section_end    = (CharT)']';
-	static const CharT char_assign         = (CharT)'=';
-	static const CharT char_comment        = (CharT)';';
-	static const CharT char_interpol       = (CharT)'$';
-	static const CharT char_interpol_start = (CharT)'{';
-	static const CharT char_interpol_sep   = (CharT)':';
-	static const CharT char_interpol_end   = (CharT)'}';
+	static const CharT char_section_start  = static_cast<CharT>('[');
+	static const CharT char_section_end    = static_cast<CharT>(']');
+	static const CharT char_assign         = static_cast<CharT>('=');
+	static const CharT char_comment		   = static_cast<CharT>(';');
+	static const CharT char_comment_vb     = static_cast<CharT>('\'');
+	static const CharT char_interpol       = static_cast<CharT>('$');
+	static const CharT char_interpol_start = static_cast<CharT>('{');
+	static const CharT char_interpol_sep   = static_cast<CharT>(':');
+	static const CharT char_interpol_end   = static_cast<CharT>('}');
 
 	static const int max_interpolation_depth = 10;
 
@@ -134,7 +136,7 @@ public:
 			if (length > 0) {
 				const auto pos = line.find_first_of(char_assign);
 				const auto & front = line.front();
-				if (front == char_comment) {
+				if (isComment(front)) {
 					continue;
 				}
 				else if (front == char_section_start) {
@@ -185,6 +187,19 @@ public:
 	void clear() {
 		sections.clear();
 		errors.clear();
+	}
+
+	inline bool isComment(const CharT & ch) const noexcept {
+		static const std::array<const CharT, 2> comment_starters = { 
+			static_cast<const CharT>(char_comment),  static_cast<const CharT>(char_comment_vb) };
+		
+		bool is_comment = false;
+		for (const auto & c: comment_starters) {
+			if (ch == c)	{
+				is_comment = true;
+			}
+		}
+		return is_comment;
 	}
 
 private:
