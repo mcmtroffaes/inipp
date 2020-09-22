@@ -190,22 +190,22 @@ public:
 private:
 	typedef std::list<std::pair<String, String> > Symbols;
 
-	auto local_symbol(const String & name) const {
+	const String local_symbol(const String & name) const {
 		return char_interpol + (char_interpol_start + name + char_interpol_end);
 	}
 
-	auto global_symbol(const String & sec_name, const String & name) const {
+	const String global_symbol(const String & sec_name, const String & name) const {
 		return local_symbol(sec_name + char_interpol_sep + name);
 	}
 
-	auto local_symbols(const String & sec_name, const Section & sec) const {
+	const Symbols local_symbols(const String & sec_name, const Section & sec) const {
 		Symbols result;
 		for (const auto & val : sec)
 			result.push_back(std::make_pair(local_symbol(val.first), global_symbol(sec_name, val.first)));
 		return result;
 	}
 
-	auto global_symbols() const {
+	const Symbols global_symbols() const {
 		Symbols result;
 		for (const auto & sec : sections)
 			for (const auto & val : sec.second)
