@@ -24,13 +24,13 @@ SOFTWARE.
 
 #pragma once
 
-#include <array>
 #include <cstring>
 #include <string>
 #include <iostream>
 #include <list>
 #include <locale>
 #include <map>
+#include <memory>
 #include <algorithm>
 #include <functional>
 #include <cctype>
@@ -114,12 +114,17 @@ public:
 	const CharT char_interpol_sep;
 	const CharT char_interpol_end;
 
-	Format(const std::array<CharT, 8>& chs)
-		: char_section_start(chs[0]), char_section_end(chs[1]), char_assign(chs[2])
-		, char_comment(chs[3]), char_interpol(chs[4]), char_interpol_start(chs[5])
-		, char_interpol_sep(chs[6]), char_interpol_end(chs[7]) {}
+	Format(CharT section_start, CharT section_end, CharT assign, CharT comment, CharT interpol, CharT interpol_start, CharT interpol_sep, CharT interpol_end)
+		: char_section_start(section_start)
+		, char_section_end(section_end)
+		, char_assign(assign)
+		, char_comment(comment)
+		, char_interpol(interpol)
+		, char_interpol_start(interpol_start)
+		, char_interpol_sep(interpol_sep)
+		, char_interpol_end(interpol_end) {}
 
-	Format() : Format({ '[', ']', '=', ';', '$', '{', ':', '}' }) {}
+	Format() : Format('[', ']', '=', ';', '$', '{', ':', '}') {}
 
 	Format(const Format&) = default;
 
@@ -142,18 +147,18 @@ public:
 
 	Sections sections;
 	std::list<String> errors;
-	const Format<CharT> format;
+	std::shared_ptr<Format<CharT>> format;
 
-	int max_interpolation_depth = 10;
+	const int max_interpolation_depth = 10;
 
-	Ini() {};
-	Ini(const Format<CharT>& fmt) : format(fmt) {};
+	Ini() : format(std::make_shared<Format<CharT>>()) {};
+	Ini(std::shared_ptr<Format<CharT>> fmt) : format(fmt) {};
 
 	void generate(std::basic_ostream<CharT>& os) const {
 		for (auto const & sec : sections) {
-			os << format.char_section_start << sec.first << format.char_section_end << std::endl;
+			os << format->char_section_start << sec.first << format->char_section_end << std::endl;
 			for (auto const & val : sec.second) {
-				os << val.first << format.char_assign << val.second << std::endl;
+				os << val.first << format->char_assign << val.second << std::endl;
 			}
 			os << std::endl;
 		}
@@ -168,13 +173,13 @@ public:
 			detail::rtrim(line, loc);
 			const auto length = line.length();
 			if (length > 0) {
-				const auto pos = std::find_if(line.begin(), line.end(), [this](CharT ch) { return format.is_assign(ch); });
+				const auto pos = std::find_if(line.begin(), line.end(), [this](CharT ch) { return format->is_assign(ch); });
 				const auto & front = line.front();
-				if (format.is_comment(front)) {
+				if (format->is_comment(front)) {
 					continue;
 				}
-				else if (format.is_section_start(front)) {
-					if (format.is_section_end(line.back()))
+				else if (format->is_section_start(front)) {
+					if (format->is_section_end(line.back()))
 						section = line.substr(1, length - 2);
 					else
 						errors.push_back(line);
@@ -229,7 +234,7 @@ private:
 	const Symbols local_symbols(const String & sec_name, const Section & sec) const {
 		Symbols result;
 		for (const auto & val : sec)
-			result.push_back(std::make_pair(format.local_symbol(val.first), format.global_symbol(sec_name, val.first)));
+			result.push_back(std::make_pair(format->local_symbol(val.first), format->global_symbol(sec_name, val.first)));
 		return result;
 	}
 
@@ -238,7 +243,7 @@ private:
 		for (const auto & sec : sections)
 			for (const auto & val : sec.second)
 				result.push_back(
-					std::make_pair(format.global_symbol(sec.first, val.first), val.second));
+					std::make_pair(format->global_symbol(sec.first, val.first), val.second));
 		return result;
 	}
 

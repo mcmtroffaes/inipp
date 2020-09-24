@@ -44,9 +44,11 @@ void WriteMessage(const Ini<CharT> & ini) {
 	Logger::WriteMessage(os.str().c_str());
 }
 
-class HashFormat : public Format<char> {
+class MixedFormat : public Format<char> {
 public:
-	HashFormat() : Format<char>({ '[', ']', '=', '#', '$', '{', ':', '}' }) {};
+	virtual bool is_comment(char ch) const {
+		return ch == ';' || ch == '\'' || ch == '#';
+	}
 };
 
 namespace unittest
@@ -186,6 +188,7 @@ namespace unittest
 		{
 			Ini<char> ini;
 			std::istringstream ss("# hello world\n[default]\na=2");
+			Assert::IsFalse(ini.format->is_comment('#'));
 			ini.parse(ss);
 			WriteMessage(ini);
 			Assert::AreEqual(ini.sections.at("default").at("a"), std::string("2"));
@@ -194,10 +197,22 @@ namespace unittest
 
 		TEST_METHOD(TestHashComment2)
 		{
-			HashFormat hashformat;
-			Ini<char> ini(hashformat);
-			Assert::AreEqual(hashformat.char_comment, '#');
+			auto fmt = std::make_shared<Format<char>>('[', ']', '=', '#', '$', '{', ':', '}');
+			Ini<char> ini(fmt);
+			Assert::IsTrue(ini.format->is_comment('#'));
 			std::istringstream ss("# hello world\n[default]\na=2");
+			ini.parse(ss);
+			WriteMessage(ini);
+			Assert::AreEqual(ini.sections.at("default").at("a"), std::string("2"));
+			Assert::IsTrue(ini.errors.empty());
+		}
+
+		TEST_METHOD(TestMixedComment)
+		{
+			auto fmt = std::make_shared<MixedFormat>();
+			Ini<char> ini(fmt);
+			Assert::IsTrue(ini.format->is_comment('#'));
+			std::istringstream ss("# hello world\n; hello world\n' hello world\n[default]\na=2");
 			ini.parse(ss);
 			WriteMessage(ini);
 			Assert::AreEqual(ini.sections.at("default").at("a"), std::string("2"));
