@@ -101,20 +101,18 @@ public:
 	const CharT char_section_end;
 	const CharT char_assign;
 	const CharT char_comment;
-	const CharT char_interpol;
-	const CharT char_interpol_start;
-	const CharT char_interpol_sep;
-	const CharT char_interpol_end;
 
 	// used for parsing
 	virtual bool is_section_start(CharT ch) const { return ch == char_section_start; }
 	virtual bool is_section_end(CharT ch) const { return ch == char_section_end; }
 	virtual bool is_assign(CharT ch) const { return ch == char_assign; }
 	virtual bool is_comment(CharT ch) const { return ch == char_comment; }
-	virtual bool is_interpol(CharT ch) const { return ch == char_interpol; }
-	virtual bool is_interpol_start(CharT ch) const { return ch == char_interpol_start; }
-	virtual bool is_interpol_sep(CharT ch) const { return ch == char_interpol_sep; }
-	virtual bool is_interpol_end(CharT ch) const { return ch == char_interpol_end; }
+
+	// used for both generating and parsing
+	const CharT char_interpol;
+	const CharT char_interpol_start;
+	const CharT char_interpol_sep;
+	const CharT char_interpol_end;
 
 	Format(const std::array<CharT, 8>& chs)
 		: char_section_start(chs[0]), char_section_end(chs[1]), char_assign(chs[2])
