@@ -174,7 +174,6 @@ public:
 				const auto pos = std::find_if(line.begin(), line.end(), [this](CharT ch) { return format->is_assign(ch); });
 				const auto & front = line.front();
 				if (format->is_comment(front)) {
-					continue;
 				}
 				else if (format->is_section_start(front)) {
 					if (format->is_section_end(line.back()))
