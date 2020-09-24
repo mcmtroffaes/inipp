@@ -147,7 +147,7 @@ public:
 	std::list<String> errors;
 	std::shared_ptr<Format<CharT>> format;
 
-	const int max_interpolation_depth = 10;
+	static const int max_interpolation_depth = 10;
 
 	Ini() : format(std::make_shared<Format<CharT>>()) {};
 	Ini(std::shared_ptr<Format<CharT>> fmt) : format(fmt) {};
