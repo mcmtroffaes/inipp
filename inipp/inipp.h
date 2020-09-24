@@ -108,7 +108,7 @@ public:
 	virtual bool is_assign(CharT ch) const { return ch == char_assign; }
 	virtual bool is_comment(CharT ch) const { return ch == char_comment; }
 
-	// used for both generating and parsing
+	// used for interpolation
 	const CharT char_interpol;
 	const CharT char_interpol_start;
 	const CharT char_interpol_sep;
