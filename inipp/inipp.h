@@ -92,6 +92,36 @@ inline bool extract(const std::basic_string<CharT> & value, std::basic_string<Ch
 }
 
 template<class CharT>
+class IniFormat
+{
+public:
+	CharT section_start;
+	CharT section_end;
+	CharT assign;
+	CharT comment;
+	CharT interpol;
+	CharT interpol_start;
+	CharT interpol_sep;
+	CharT interpol_end;
+
+	IniFormat(std::array<CharT, 8> chs)
+		: section_start(chars[0]), section_end(chars[1]), assign(chars[2]), comment(chars[3]), interpol(chars[4]), interpol_start(chars[5]), interpol_sep(chars[6]), interpol_end(chars[7])
+	{}
+
+	IniFormat() : IniFormat({ '[', ']', '=', ';', '$', '{', ':', '}' })
+	{}
+
+	virtual bool is_section_start(CharT ch) const { return ch == section_start; }
+	virtual bool is_section_end(CharT ch) const { return ch == section_end; }
+	virtual bool is_assign(CharT ch) const { return ch == assign; }
+	virtual bool is_comment(CharT ch) const { return ch == comment; }
+	virtual bool is_interpol(CharT ch) const { return ch == interpol; }
+	virtual bool is_interpol_start(CharT ch) const { return ch == interpol_start; }
+	virtual bool is_interpol_sep(CharT ch) const { return ch == interpol_sep; }
+	virtual bool is_interpol_end(CharT ch) const { return ch == interpol_end; }
+};
+
+template<class CharT>
 class Ini
 {
 public:
