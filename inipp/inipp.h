@@ -102,16 +102,16 @@ public:
 	Sections sections;
 	std::list<String> errors;
 
-	static const CharT char_section_start  = (CharT)'[';
-	static const CharT char_section_end    = (CharT)']';
-	static const CharT char_assign         = (CharT)'=';
-	static const CharT char_comment        = (CharT)';';
-	static const CharT char_interpol       = (CharT)'$';
-	static const CharT char_interpol_start = (CharT)'{';
-	static const CharT char_interpol_sep   = (CharT)':';
-	static const CharT char_interpol_end   = (CharT)'}';
+	CharT char_section_start = (CharT)'[';
+	CharT char_section_end = (CharT)']';
+	CharT char_assign = (CharT)'=';
+	CharT char_comment = (CharT)';';
+	CharT char_interpol = (CharT)'$';
+	CharT char_interpol_start = (CharT)'{';
+	CharT char_interpol_sep = (CharT)':';
+	CharT char_interpol_end = (CharT)'}';
 
-	static const int max_interpolation_depth = 10;
+	int max_interpolation_depth = 10;
 
 	void generate(std::basic_ostream<CharT> & os) const {
 		for (auto const & sec : sections) {

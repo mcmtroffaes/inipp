@@ -44,6 +44,13 @@ void WriteMessage(const Ini<CharT> & ini) {
 	Logger::WriteMessage(os.str().c_str());
 }
 
+class IniHash : public Ini<char> {
+public:
+	IniHash() {
+		char_comment = '#';
+	};
+};
+
 namespace unittest
 {		
 	TEST_CLASS(UnitTest)
@@ -175,6 +182,27 @@ namespace unittest
 			WriteMessage(ini);
 			Assert::AreEqual(ini.sections.at("sec1").at("c"), std::string("0 2"));
 			Assert::AreEqual(ini.sections.at("sec2").at("c"), std::string("3 1"));
+		}
+
+		TEST_METHOD(TestHashComment1)
+		{
+			Ini<char> ini;
+			std::istringstream ss("# hello world\n[default]\na=2");
+			ini.parse(ss);
+			WriteMessage(ini);
+			Assert::AreEqual(ini.sections.at("default").at("a"), std::string("2"));
+			Assert::IsFalse(ini.errors.empty());
+		}
+
+		TEST_METHOD(TestHashComment2)
+		{
+			IniHash inihash;
+			Assert::AreEqual(inihash.char_comment, '#');
+			std::istringstream ss("# hello world\n[default]\na=2");
+			inihash.parse(ss);
+			WriteMessage(inihash);
+			Assert::AreEqual(inihash.sections.at("default").at("a"), std::string("2"));
+			Assert::IsTrue(inihash.errors.empty());
 		}
 	};
 } // namespace unittest
