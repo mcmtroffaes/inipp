@@ -126,8 +126,6 @@ public:
 
 	Format() : Format('[', ']', '=', ';', '$', '{', ':', '}') {}
 
-	Format(const Format&) = default;
-
 	const std::basic_string<CharT> local_symbol(const std::basic_string<CharT>& name) const {
 		return char_interpol + (char_interpol_start + name + char_interpol_end);
 	}
