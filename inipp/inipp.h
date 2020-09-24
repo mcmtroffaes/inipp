@@ -24,17 +24,17 @@ SOFTWARE.
 
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <cstring>
-#include <string>
+#include <functional>
 #include <iostream>
 #include <list>
 #include <locale>
 #include <map>
 #include <memory>
-#include <algorithm>
-#include <functional>
-#include <cctype>
 #include <sstream>
+#include <string>
 
 namespace inipp {
 
