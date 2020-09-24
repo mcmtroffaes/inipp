@@ -44,11 +44,9 @@ void WriteMessage(const Ini<CharT> & ini) {
 	Logger::WriteMessage(os.str().c_str());
 }
 
-class IniHash : public Ini<char> {
+class HashFormat : public Format<char> {
 public:
-	IniHash() {
-		char_comment = '#';
-	};
+	HashFormat() : Format<char>({ '[', ']', '=', '#', '$', '{', ':', '}' }) {};
 };
 
 namespace unittest
@@ -196,13 +194,14 @@ namespace unittest
 
 		TEST_METHOD(TestHashComment2)
 		{
-			IniHash inihash;
-			Assert::AreEqual(inihash.char_comment, '#');
+			HashFormat hashformat;
+			Ini<char> ini(hashformat);
+			Assert::AreEqual(hashformat.char_comment, '#');
 			std::istringstream ss("# hello world\n[default]\na=2");
-			inihash.parse(ss);
-			WriteMessage(inihash);
-			Assert::AreEqual(inihash.sections.at("default").at("a"), std::string("2"));
-			Assert::IsTrue(inihash.errors.empty());
+			ini.parse(ss);
+			WriteMessage(ini);
+			Assert::AreEqual(ini.sections.at("default").at("a"), std::string("2"));
+			Assert::IsTrue(ini.errors.empty());
 		}
 	};
 } // namespace unittest

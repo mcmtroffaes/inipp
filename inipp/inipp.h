@@ -24,6 +24,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <array>
 #include <cstring>
 #include <string>
 #include <iostream>
@@ -92,33 +93,45 @@ inline bool extract(const std::basic_string<CharT> & value, std::basic_string<Ch
 }
 
 template<class CharT>
-class IniFormat
+class Format
 {
 public:
-	CharT section_start;
-	CharT section_end;
-	CharT assign;
-	CharT comment;
-	CharT interpol;
-	CharT interpol_start;
-	CharT interpol_sep;
-	CharT interpol_end;
+	// used for generating
+	const CharT char_section_start;
+	const CharT char_section_end;
+	const CharT char_assign;
+	const CharT char_comment;
+	const CharT char_interpol;
+	const CharT char_interpol_start;
+	const CharT char_interpol_sep;
+	const CharT char_interpol_end;
 
-	IniFormat(std::array<CharT, 8> chs)
-		: section_start(chars[0]), section_end(chars[1]), assign(chars[2]), comment(chars[3]), interpol(chars[4]), interpol_start(chars[5]), interpol_sep(chars[6]), interpol_end(chars[7])
-	{}
+	// used for parsing
+	virtual bool is_section_start(CharT ch) const { return ch == char_section_start; }
+	virtual bool is_section_end(CharT ch) const { return ch == char_section_end; }
+	virtual bool is_assign(CharT ch) const { return ch == char_assign; }
+	virtual bool is_comment(CharT ch) const { return ch == char_comment; }
+	virtual bool is_interpol(CharT ch) const { return ch == char_interpol; }
+	virtual bool is_interpol_start(CharT ch) const { return ch == char_interpol_start; }
+	virtual bool is_interpol_sep(CharT ch) const { return ch == char_interpol_sep; }
+	virtual bool is_interpol_end(CharT ch) const { return ch == char_interpol_end; }
 
-	IniFormat() : IniFormat({ '[', ']', '=', ';', '$', '{', ':', '}' })
-	{}
+	Format(const std::array<CharT, 8>& chs)
+		: char_section_start(chs[0]), char_section_end(chs[1]), char_assign(chs[2])
+		, char_comment(chs[3]), char_interpol(chs[4]), char_interpol_start(chs[5])
+		, char_interpol_sep(chs[6]), char_interpol_end(chs[7]) {}
 
-	virtual bool is_section_start(CharT ch) const { return ch == section_start; }
-	virtual bool is_section_end(CharT ch) const { return ch == section_end; }
-	virtual bool is_assign(CharT ch) const { return ch == assign; }
-	virtual bool is_comment(CharT ch) const { return ch == comment; }
-	virtual bool is_interpol(CharT ch) const { return ch == interpol; }
-	virtual bool is_interpol_start(CharT ch) const { return ch == interpol_start; }
-	virtual bool is_interpol_sep(CharT ch) const { return ch == interpol_sep; }
-	virtual bool is_interpol_end(CharT ch) const { return ch == interpol_end; }
+	Format() : Format({ '[', ']', '=', ';', '$', '{', ':', '}' }) {}
+
+	Format(const Format&) = default;
+
+	const std::basic_string<CharT> local_symbol(const std::basic_string<CharT>& name) const {
+		return char_interpol + (char_interpol_start + name + char_interpol_end);
+	}
+
+	const std::basic_string<CharT> global_symbol(const std::basic_string<CharT>& sec_name, const std::basic_string<CharT>& name) const {
+		return local_symbol(sec_name + char_interpol_sep + name);
+	}
 };
 
 template<class CharT>
@@ -131,23 +144,18 @@ public:
 
 	Sections sections;
 	std::list<String> errors;
-
-	CharT char_section_start = (CharT)'[';
-	CharT char_section_end = (CharT)']';
-	CharT char_assign = (CharT)'=';
-	CharT char_comment = (CharT)';';
-	CharT char_interpol = (CharT)'$';
-	CharT char_interpol_start = (CharT)'{';
-	CharT char_interpol_sep = (CharT)':';
-	CharT char_interpol_end = (CharT)'}';
+	const Format<CharT> format;
 
 	int max_interpolation_depth = 10;
 
-	void generate(std::basic_ostream<CharT> & os) const {
+	Ini() {};
+	Ini(const Format<CharT>& fmt) : format(fmt) {};
+
+	void generate(std::basic_ostream<CharT>& os) const {
 		for (auto const & sec : sections) {
-			os << char_section_start << sec.first << char_section_end << std::endl;
+			os << format.char_section_start << sec.first << format.char_section_end << std::endl;
 			for (auto const & val : sec.second) {
-				os << val.first << char_assign << val.second << std::endl;
+				os << val.first << format.char_assign << val.second << std::endl;
 			}
 			os << std::endl;
 		}
@@ -162,20 +170,20 @@ public:
 			detail::rtrim(line, loc);
 			const auto length = line.length();
 			if (length > 0) {
-				const auto pos = line.find_first_of(char_assign);
+				const auto pos = std::find_if(line.begin(), line.end(), [this](CharT ch) { return format.is_assign(ch); });
 				const auto & front = line.front();
-				if (front == char_comment) {
+				if (format.is_comment(front)) {
 					continue;
 				}
-				else if (front == char_section_start) {
-					if (line.back() == char_section_end)
+				else if (format.is_section_start(front)) {
+					if (format.is_section_end(line.back()))
 						section = line.substr(1, length - 2);
 					else
 						errors.push_back(line);
 				}
-				else if (pos != 0 && pos != String::npos) {
-					String variable(line.substr(0, pos));
-					String value(line.substr(pos + 1, length));
+				else if (pos != line.begin() && pos != line.end()) {
+					String variable(line.begin(), pos);
+					String value(pos + 1, line.end());
 					detail::rtrim(variable, loc);
 					detail::ltrim(value, loc);
 					auto & sec = sections[section];
@@ -220,18 +228,10 @@ public:
 private:
 	typedef std::list<std::pair<String, String> > Symbols;
 
-	const String local_symbol(const String & name) const {
-		return char_interpol + (char_interpol_start + name + char_interpol_end);
-	}
-
-	const String global_symbol(const String & sec_name, const String & name) const {
-		return local_symbol(sec_name + char_interpol_sep + name);
-	}
-
 	const Symbols local_symbols(const String & sec_name, const Section & sec) const {
 		Symbols result;
 		for (const auto & val : sec)
-			result.push_back(std::make_pair(local_symbol(val.first), global_symbol(sec_name, val.first)));
+			result.push_back(std::make_pair(format.local_symbol(val.first), format.global_symbol(sec_name, val.first)));
 		return result;
 	}
 
@@ -240,7 +240,7 @@ private:
 		for (const auto & sec : sections)
 			for (const auto & val : sec.second)
 				result.push_back(
-					std::make_pair(global_symbol(sec.first, val.first), val.second));
+					std::make_pair(format.global_symbol(sec.first, val.first), val.second));
 		return result;
 	}
 
