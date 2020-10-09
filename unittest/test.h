@@ -6,7 +6,7 @@
 using namespace inipp;
 
 template <class CharT>
-static inline auto read_all(const std::string & filename) {
+static inline std::basic_string<CharT> read_all(const std::string & filename) {
 	std::basic_ifstream<CharT> is(filename);
 	std::basic_stringstream<CharT> sstr;
 	sstr << is.rdbuf();
@@ -14,7 +14,7 @@ static inline auto read_all(const std::string & filename) {
 }
 
 template <class CharT>
-static inline auto parse(const std::string & filename, Ini<CharT> & ini) {
+static inline void parse(const std::string & filename, Ini<CharT> & ini) {
 	std::basic_ifstream<CharT> is(filename);
 	ini.parse(is);
 }
@@ -27,7 +27,7 @@ static inline void errors(std::basic_ostream<CharT> & os, const Ini<CharT> & ini
 }
 
 template <class CharT>
-static inline auto test(const std::string & inifile, Ini<CharT> & ini) {
+static inline std::basic_string<CharT> test(const std::string & inifile, Ini<CharT> & ini) {
 	std::basic_ostringstream<CharT> os;
 	parse(inifile, ini);
 	os << ">>> ERRORS <<<" << std::endl;
@@ -41,7 +41,7 @@ static inline auto test(const std::string & inifile, Ini<CharT> & ini) {
 }
 
 template <class CharT>
-static inline auto runtest(const char *inifile, const char *expectedfile, std::basic_ostream<CharT> & os) {
+static inline bool runtest(const char *inifile, const char *expectedfile, std::basic_ostream<CharT> & os) {
 	Ini<CharT> ini;
 	auto actual = test(inifile, ini);
 	auto expected = read_all<CharT>(expectedfile);
