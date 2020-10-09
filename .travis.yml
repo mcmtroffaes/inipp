@@ -1,3 +1,4 @@
 dist: focal
+sudo: false
 language: cpp
 script: cmake . && make && make test
