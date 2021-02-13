@@ -92,6 +92,13 @@ inline bool extract(const std::basic_string<CharT> & value, std::basic_string<Ch
 	return true;
 }
 
+template <typename CharT, typename T>
+inline bool get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & sec, const std::basic_string<CharT> & key, T & dst) {
+	const auto it = sec.find(key);
+	if (it == sec.end()) return false;
+	return extract(it->second, dst);
+}
+
 template<class CharT>
 class Format
 {

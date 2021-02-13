@@ -218,6 +218,24 @@ namespace unittest
 			Assert::AreEqual(ini.sections.at("default").at("a"), std::string("2"));
 			Assert::IsTrue(ini.errors.empty());
 		}
+
+		TEST_METHOD(TestGetValue)
+		{
+			Ini<char> ini;
+			std::istringstream ss("[sec1]\na=2\nb=bla");
+			ini.parse(ss);
+			WriteMessage(ini);
+			const auto & sec = ini.sections.at("sec1");
+			int a = 4;
+			int b = 7;
+			int c = 10;
+			Assert::IsTrue(get_value(sec, std::string("a"), a));
+			Assert::AreEqual(a, 2);
+			Assert::IsFalse(get_value(sec, std::string("b"), b));
+			Assert::AreEqual(b, 7);
+			Assert::IsFalse(get_value(sec, std::string("c"), c));
+			Assert::AreEqual(c, 10);
+		}
 	};
 } // namespace unittest
 
