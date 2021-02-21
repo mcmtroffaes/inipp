@@ -99,6 +99,11 @@ inline bool get_value(const std::map<std::basic_string<CharT>, std::basic_string
 	return extract(it->second, dst);
 }
 
+template <typename CharT, typename T>
+inline bool get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>>& sec, const CharT* key, T& dst) {
+	return get_value(sec, std::basic_string<CharT>(key), dst);
+}
+
 template<class CharT>
 class Format
 {

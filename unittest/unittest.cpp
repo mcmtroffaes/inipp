@@ -229,11 +229,11 @@ namespace unittest
 			int a = 4;
 			int b = 7;
 			int c = 10;
-			Assert::IsTrue(get_value(sec, std::string("a"), a));
+			Assert::IsTrue(get_value(sec, "a", a));
 			Assert::AreEqual(a, 2);
-			Assert::IsFalse(get_value(sec, std::string("b"), b));
+			Assert::IsFalse(get_value(sec, "b", b));
 			Assert::AreEqual(b, 7);
-			Assert::IsFalse(get_value(sec, std::string("c"), c));
+			Assert::IsFalse(get_value(sec, "c", c));
 			Assert::AreEqual(c, 10);
 		}
 	};
