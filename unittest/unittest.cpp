@@ -254,6 +254,10 @@ int main() {
 	test.TestInterpolate1();
 	test.TestExtract();
 	test.TestDefault();
+	test.TestHashComment1();
+	test.TestHashComment2();
+	test.TestMixedComment();
+	test.TestGetValue();
 	return 0;
 }
 #endif
