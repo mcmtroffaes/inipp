@@ -56,6 +56,11 @@ inline void rtrim(std::basic_string<CharT> & s, const std::locale & loc) {
                 s.end());
 }
 
+template <class CharT, class UnaryPredicate>
+inline void rtrim2(std::basic_string<CharT>& s, UnaryPredicate pred) {
+	s.erase(std::find_if(s.begin(), s.end(), pred), s.end());
+}
+
 // string replacement function based on http://stackoverflow.com/a/3418285
 
 template <class CharT>
@@ -230,6 +235,15 @@ public:
 		for (auto & sec2 : sections)
 			for (const auto & val : sec)
 				sec2.second.insert(val);
+	}
+
+	void strip_trailing_comments() {
+		const std::locale loc{ "C" };
+		for (auto & sec : sections)
+			for (auto & val : sec.second) {
+				detail::rtrim2(val.second, [this](CharT ch) { return format->is_comment(ch); });
+				detail::rtrim(val.second, loc);
+			}
 	}
 
 	void clear() {

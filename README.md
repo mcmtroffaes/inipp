@@ -11,6 +11,7 @@ Simple header-only C++ ini parser and generator.
 * Wide character support for native unicode on Windows.
 * Default section support (similar to Python's ConfigParser).
 * Interpolation support (i.e. variable substitution, similar to Python's ConfigParser).
+* Trailing comments support.
 * Simple design and implementation.
 * Permissive MIT license.
 
@@ -26,6 +27,7 @@ int main() {
 	ini.parse(is);
 	std::cout << "raw ini file:" << std::endl;
 	ini.generate(std::cout);
+	ini.strip_trailing_comments();
 	ini.default_section(ini.sections["DEFAULT"]);
 	ini.interpolate();
 	std::cout << "ini file after default section and interpolation:" << std::endl;

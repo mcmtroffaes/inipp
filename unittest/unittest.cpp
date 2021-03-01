@@ -236,6 +236,24 @@ namespace unittest
 			Assert::IsFalse(get_value(sec, "c", c));
 			Assert::AreEqual(c, 10);
 		}
+
+		TEST_METHOD(TestTrailingComments)
+		{
+			Ini<char> ini;
+			std::istringstream ss("[sec1]\n; line comment\na=2\nb=3 ; trailing comment\nc=4 ; more ; comments ; here");
+			ini.parse(ss);
+			WriteMessage(ini);
+			Assert::IsTrue(ini.errors.empty());
+			const auto& sec = ini.sections.at("sec1");
+			Assert::AreEqual(sec.at("a"), std::string("2"));
+			Assert::AreEqual(sec.at("b"), std::string("3 ; trailing comment"));
+			Assert::AreEqual(sec.at("c"), std::string("4 ; more ; comments ; here"));
+			ini.strip_trailing_comments();
+			WriteMessage(ini);
+			Assert::AreEqual(sec.at("a"), std::string("2"));
+			Assert::AreEqual(sec.at("b"), std::string("3"));
+			Assert::AreEqual(sec.at("c"), std::string("4"));
+		}
 	};
 } // namespace unittest
 
