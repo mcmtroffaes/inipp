@@ -276,6 +276,7 @@ int main() {
 	test.TestHashComment2();
 	test.TestMixedComment();
 	test.TestGetValue();
+	test.TestTrailingComments();
 	return 0;
 }
 #endif
