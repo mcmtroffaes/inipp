@@ -33,6 +33,7 @@ SOFTWARE.
 #include <functional>
 #include <cctype>
 #include <sstream>
+#include <type_traits>
 
 namespace inipp {
 
@@ -72,6 +73,11 @@ inline bool replace(std::basic_string<CharT> & str, const std::basic_string<Char
 
 template <typename CharT, typename T>
 inline bool extract(const std::basic_string<CharT> & value, T & dst) {
+    if (std::is_unsigned<T>::value && value.size() > 0 && value[0] == '-')
+    {
+        return false;
+    }
+
 	CharT c;
 	std::basic_istringstream<CharT> is{ value };
 	T result;

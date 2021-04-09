@@ -14,6 +14,11 @@ Simple header-only C++ ini parser and generator.
 * Simple design and implementation.
 * Permissive MIT license.
 
+## Requirements
+
+* C++14
+
+
 ## Example
 
 ```cpp
