@@ -1,10 +1,18 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.0)
+
 project(inipp)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include_directories("inipp/")
-install(FILES inipp/inipp.h DESTINATION include)
-include(CTest)
-if (BUILD_TESTING)
-    add_subdirectory("unittest/")
+
+add_library(inipp INTERFACE)
+add_library(inipp::inipp ALIAS inipp)
+
+target_include_directories(inipp SYSTEM INTERFACE inipp)
+
+target_compile_features(inipp INTERFACE cxx_std_11)
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  include(CTest)
+endif()
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+  add_subdirectory(unittest)
 endif()
