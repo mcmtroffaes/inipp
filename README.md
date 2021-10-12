@@ -39,6 +39,14 @@ int main() {
 }
 ```
 
+To include in a cmake project:
+
+```
+FetchContent_Declare(inipp GIT_REPOSITORY https://github.com/mcmtroffaes/inipp.git)
+FetchContent_MakeAvailable(inipp)
+target_link_libraries(MyTarget PRIVATE inipp::inipp)
+```
+
 ## Parsing algorithm
 
 * The *section* is set to the empty string.
