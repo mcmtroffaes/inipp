@@ -30,6 +30,7 @@ SOFTWARE.
 #include <functional>
 #include <iostream>
 #include <list>
+#include <vector>
 #include <locale>
 #include <map>
 #include <memory>
@@ -205,7 +206,7 @@ public:
 					detail::ltrim(value, loc);
 					auto & sec = sections[section];
 					if (sec.find(variable) == sec.end())
-						sec.insert(std::make_pair(variable, value));
+						sec.emplace(variable, value);
 					else
 						errors.push_back(line);
 				}
@@ -252,12 +253,12 @@ public:
 	}
 
 private:
-	using Symbols = std::list<std::pair<String, String>>;
+	using Symbols = std::vector<std::pair<String, String>>;
 
 	const Symbols local_symbols(const String & sec_name, const Section & sec) const {
 		Symbols result;
 		for (const auto & val : sec)
-			result.push_back(std::make_pair(format->local_symbol(val.first), format->global_symbol(sec_name, val.first)));
+			result.emplace_back(format->local_symbol(val.first), format->global_symbol(sec_name, val.first));
 		return result;
 	}
 
@@ -265,8 +266,7 @@ private:
 		Symbols result;
 		for (const auto & sec : sections)
 			for (const auto & val : sec.second)
-				result.push_back(
-					std::make_pair(format->global_symbol(sec.first, val.first), val.second));
+				result.emplace_back(format->global_symbol(sec.first, val.first), val.second);
 		return result;
 	}
 
