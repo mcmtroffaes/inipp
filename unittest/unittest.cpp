@@ -1,9 +1,5 @@
 #include "test.h"
 
-#ifdef _MSC_VER
-#include "CppUnitTest.h"
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-#else
 #define TEST_CLASS(T) class T
 #define TEST_METHOD(Func) void Func()
 
@@ -35,7 +31,6 @@ namespace Logger {
 	}
 
 } // namespace Logger
-#endif
 
 template <class CharT>
 void WriteMessage(const Ini<CharT> & ini) {
@@ -257,7 +252,6 @@ namespace unittest
 	};
 } // namespace unittest
 
-#ifndef _MSC_VER
 int main() {
 	unittest::UnitTest test;
 	test.TestParseGenerate1();
@@ -279,4 +273,3 @@ int main() {
 	test.TestTrailingComments();
 	return 0;
 }
-#endif
